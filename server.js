@@ -4,11 +4,28 @@ var http = require('http');
 var staticServer = require('node-static');
 var socketio = require('socket.io');
 var playlist = require('./Playlist.js');
-var medialist = require('./Medialist.js');
-var formidable = require('formidable');
 
+var formidable = require('formidable');
 var fileServer = new staticServer.Server(__dirname + '/public');
 var PORT = 8085;
+var mediaFolder = "/media/";
+
+var argv = require('optimist')
+    .usage('Start the Song Server.\nUsage: $0')
+    .alias('p', 'port')
+    .describe('p', 'Port to start server on')
+    .alias('m', 'media')
+    .describe('m', 'The media folder(where songs will be stored) ex : -m "/media"')
+    .argv
+;
+
+/* Setting Defaults */
+
+PORT = argv.port || PORT;
+mediaFolder = argv.media || mediaFolder;
+
+var medialist = require('./Medialist.js')(mediaFolder);
+
 
 var server = http.createServer(function(request, response) {
     if (request.url === '/upload') {
