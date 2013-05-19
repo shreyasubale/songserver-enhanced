@@ -1,0 +1,21 @@
+
+[Installation]
+
+Checkout / Download and in the project's directory enter :
+
+npm install
+
+npm will auto install dependencies.
+
+
+[Running] : 
+
+npm server.js
+
+
+[options]
+
+-m , --media : The media folder ( folder where media will be stored ) 
+-p , --port : The port server will listen on 
+
+defaults : port 8085 , media folder : media
