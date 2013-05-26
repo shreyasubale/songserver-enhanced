@@ -13,6 +13,17 @@ h1{
     -moz-transition: all 0.5s;
 }
 
+.icons{
+    float:right;
+}
+.remove{
+    width: 20px ;
+    height : 20px;
+    background-position: 306px 65px;
+    display: block;
+    background-image: url("../img/glyphicons-halflings.png");
+}
+
 #medialist li span:hover{
     background-color: #777;
     color: black;
