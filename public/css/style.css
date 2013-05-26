@@ -1,15 +1,13 @@
-@font-face {
-    font-family: 'Overlock';
-    src: url(OverlockSC-Regular.ttf);
+body{
+    font-family : "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-body{
-    font-family: 'Overlock';
+h1{
+    text-shadow: 0px 0px 10px gray;
 }
 
 #medialist li span{
-    color: blue;
-    text-decoration: underline;
+
     cursor: pointer;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -28,13 +26,17 @@ body{
     color: green;
 }
 
+#playlist .addedByServer .ip {
+    color: orange;
+}
+
 #playlist .date{
     color: blue;
 }
 
 form{
     border: 1px solid black;
-    width: 350px;
+    width: 400px;
     padding: 10px;
     box-shadow: 0 0 5px 5px #ddd;
 }
@@ -62,7 +64,14 @@ form legend{
     padding: 10px;
 }
 
+.leftSide{
+    position: fixed;
+    
+}
+
+
 #now-playing{
+    font-size: 12px;
     border-top: 1px solid #000000;
     bottom: 0;
     height: 60px;
@@ -80,6 +89,17 @@ form legend{
     background: linear-gradient(to bottom, #333333 0%,#222222 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#222222',GradientType=0 ); /* IE6-9 */ 
 }
+.rightSide{
+    background-color: #BBBBBB;
+    color: #333333;
+    float: right;
+    font-size: 12px;
+    height: 500px;
+    position: absolute;
+    right: 0;
+    top: 41px;
+}
+
 .np-albumart{
     display:block;
     width: 50px;
@@ -89,3 +109,49 @@ form legend{
     margin-right: 5px;
     float: left;
 }
+
+#serverStatus::after {
+    content: 'Offline';
+    color: red;
+}
+
+.np-headertext{
+    font-size: 10px
+}
+
+.np-systext{
+    color: #bbbbbb;
+    font-size: 12px;
+    font-weight: bold;
+}
+.margin60{
+
+    margin-top: 60px;
+}
+.np-songinfo{
+    float:left;
+    margin-top: 4px;
+    margin-right: 2px;
+    height:45px;
+    left:61px;
+    top : 5px;
+    background:#1b1b1b;
+    border:solid 1px #000;
+    -webkit-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;border-radius:3px;
+}
+.np-songtext{
+    color : #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px 2px 5px;
+}
+
+#serverStatus.online::after {
+    content: 'Online';
+    color: green;
+}
+
