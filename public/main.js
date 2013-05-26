@@ -1,7 +1,19 @@
 "use strict";
 
 $(function(){
+    var username = localStorage.getItem("username");
+    
+    if (username == null) {
+        var name = '';
+        while (name.trim().length < 3) {
+            name = prompt("Please enter your name");
+        }
+        username = name;
+        localStorage.setItem("username", username);
+    }
+
     var socket = io.connect();
+    var serverLastSeenOn = 0;
     
     socket.on('init', function(data){
         var medialist = data.medialist;
@@ -15,8 +27,26 @@ $(function(){
     
     socket.on('medialist updated', updateMedialist);
     
-    socket.on('wait for song add', function(time){
-        alert('Please wait ' + time + ' seconds before adding next song');
+    socket.on('message', function(message) {
+        alert(message);
+    });
+    
+    var serverTimeoutCheck;
+    socket.on('server stats', function(stats) {
+        serverLastSeenOn = new Date();
+        
+        clearTimeout(serverTimeoutCheck);
+        $("#serverStatus").addClass("online");
+        $("#totalConnectedUsers").text(stats.totalConnectedUsers);
+        $("#totalSongs").text(stats.totalSongs);
+        
+        serverTimeoutCheck = setTimeout(function() {
+            var now = new Date();
+            
+            if ((now - serverLastSeenOn) > 2000) {
+                $("#serverStatus").removeClass("online");
+            }
+        }, 2000);
     });
     
     function updatePlaylist(playlist){
@@ -26,11 +56,21 @@ $(function(){
         }else{
             for (var i = 0; i < playlist.length; i++){
                 var song = playlist[i];
-                var date = new Date(song.addedOn);
                 var text = '<span class="path">' + song.path + '</span> - '
-                            + '<span class="ip">' + song.addedByIP + '</span> - '
-                            + '<span class="date">' + date.toTimeString() + '</span>';
-                $("<li>").html(text).appendTo("#playlist");
+                            + '<span class="ip">' + song.addedByIP 
+                            + '(' + song.username.replace(/</g, "&lt;") + ')'
+                            + '</span>';
+                var li = $("<li>").html(text).appendTo("#playlist");
+                $("<button>").text("Remove").click(function(songIndex) {
+                    return function() {
+                        removeSong(songIndex);
+                    };
+                }(i)).appendTo(li);
+                
+                if (song.addedByIP === "127.0.0.1") {
+                    li.addClass("addedByServer");
+                    li.children(".ip").text("yolin");
+                }
             }
         }
     }
@@ -45,11 +85,18 @@ $(function(){
                 (function(song){
                     var li = $("<li>").appendTo("#medialist");
                     $("<span>").text(medialist[i]).click(function(){
-                        socket.emit('song selected', song);
+                        socket.emit('song selected', {
+                            song: song,
+                            username: username
+                        });
                     }).appendTo(li);
                 })(medialist[i]);
             }
         }
+    }
+    
+    function removeSong(songIndex) {
+        socket.emit('song removed', songIndex);
     }
     
     $("#fileUpload").submit(function(event){
