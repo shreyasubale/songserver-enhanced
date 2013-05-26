@@ -4,7 +4,15 @@ var fs = require('fs');
 
 function Medialist(mediaDir){
     this.baseDir = __dirname + mediaDir;
-    this.list = fs.readdirSync(this.baseDir);
+    try {
+        this.list = fs.readdirSync(this.baseDir);
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            console.log("creating media folder!!")
+            fs.mkdirSync(this.baseDir);
+            this.list = fs.readdirSync(this.baseDir);
+        }
+    }
 }
 
 Medialist.prototype.saveMedia = function(files, callback){
