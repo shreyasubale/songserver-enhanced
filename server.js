@@ -60,6 +60,7 @@ websock.sockets.on('connection', function(socket) {
     });
 
     socket.on('song selected', function(data){
+        
         var song = data.song;
         var username = data.username;
         var ip = socket.handshake.address.address;
