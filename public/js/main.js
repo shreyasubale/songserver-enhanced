@@ -150,4 +150,10 @@ $(function(){
     $("#about span").click(function(){
         $("#about .content").slideToggle();
     });
+    $("#upload-song").click(function(){
+        $('#uploadFile').trigger("click");
+    });
+    $("#uploadFile").bind("change",function(){
+        $("#upload").click();
+    });
 });

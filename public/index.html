@@ -6,6 +6,7 @@
         <title>Song Server</title>
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="css/style.css" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome.min.css" />
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -16,12 +17,20 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container-fluid">
+                <i class="icon-circle statusicon" id = "serverStatus"></i>
               <a class="brand" href="#">SongServer v1.1</a>
               <div class="nav-collapse collapse">
+
                 <ul class="nav">
                   <li class="active"><a href="#">Home</a></li>
                 
                 </ul>
+                <a class="upload-song" id="upload-song">Upload Song(s)</a>
+                <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
+                    <input type="file" name="uploadFile" multiple id="uploadFile" />
+                    <input type="submit" value="Upload" id="upload" />
+                    <progress id="uploadProgress" max="100" value="0"></progress>
+                </form>
               </div><!--/.nav-collapse -->
             </div>
           </div>
@@ -50,12 +59,12 @@
                 <!-- <h1>Welcome to the Song Server</h1> -->
                 
                 <ul>
-                    <li>Server Status: <span id="serverStatus"></span></li>
+                    <!-- <li>Server Status: <span id="serverStatus"></span></li> -->
                     <li>Connected Users: <span id="totalConnectedUsers"></span></li>
                     <li>Total Songs: <span id="totalSongs"></span></li>
                 </ul>
                 
-                <div id="about">
+                <!-- <div id="about">
                     <h2><span>About<span></h2>
                     <div class="content">
                         <p>Pick a song from the Medialist to queue it in the Playlist.</p>
@@ -73,18 +82,18 @@
                             <li>HTML5</li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- <h2>Playlist</h2>
                 <ol id="playlist">
                 </ol> -->
             
-                <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
+                <!-- <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
                     <legend>Upload a song (multiple selection is allowed)</legend>
                     <input type="file" name="uploadFile" multiple id="uploadFile" />
                     <input type="submit" value="Upload" id="upload" />
                     <progress id="uploadProgress" max="100" value="0"></progress>
-                </form>
+                </form> -->
             </div>
             
             <div class="rightSide">
