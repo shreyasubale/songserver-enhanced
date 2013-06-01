@@ -29,7 +29,10 @@ Medialist.prototype.saveMedia = function(files, callback){
             if (err){
                 console.error(err);
             }else{
-                this.list.push(filename);
+                //Check to see of the name already exists in list 
+                if(this.list.indexOf(filename)===-1){
+                    this.list.push(filename);    
+                }
             }
             
             if (count === totalFiles){
