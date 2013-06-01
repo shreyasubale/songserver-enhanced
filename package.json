@@ -5,9 +5,10 @@
   "main": "server.js",
   "dependencies": {
     "formidable": "https://registry.npmjs.org/formidable/-/formidable-1.0.14.tgz",
-    "node-static": "~0.6.9",
+    "node-static": "",
     "socket.io": "~0.9.14",
-    "optimist": "~0.4.0"
+    "optimist": "~0.4.0",
+    "musicmetadata": "~0.2.3"
   },
   "devDependencies": {},
   "scripts": {
