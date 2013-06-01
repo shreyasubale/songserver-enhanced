@@ -14,12 +14,12 @@ function Song(args){
 }
 
 Song.prototype.getHash = function(filePath){
-	console.log(filePath);
+	filePath = "./media/"+filePath;
 	var md5 = crypto.createHash("md5");
 	var stream = fs.ReadStream(filePath);
-	stream.on('data', function(d) { shasum.update(d); });
-	s.on('end', function() {
-	    var d = shasum.digest('hex');
+	stream.on('data', function(d) { md5.update(d); });
+	stream.on('end', function() {
+	    var d = md5.digest('hex');
 	    this.md5hash = d;
 	});
 }
