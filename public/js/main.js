@@ -83,7 +83,7 @@ $(function(){
                 var song = playlist[i];
                 songItem = addPlaylistItem(song);
         
-                $("<a class='remove' href='javascript::void(0)'>").click(function(songIndex) {
+                $("<a class='remove' href='javascript:void(0)'>").click(function(songIndex) {
                     return function() {
                         removeSong(songIndex);
                     };
