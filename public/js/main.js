@@ -1,7 +1,18 @@
 "use strict";
 
 $(function(){
+    var username = localStorage.getItem("username");
+    if (username == null) {
+        var name = '';
+        while (name.trim().length < 3) {
+            name = prompt("Please enter your name");
+        }
+        username = name;
+        localStorage.setItem("username", username);
+    }
+
     var socket = io.connect();
+    var serverLastSeenOn = 0;
     
     socket.on('init', function(data){
         var medialist = data.medialist;
@@ -12,25 +23,76 @@ $(function(){
     });
     
     socket.on('playlist updated', updatePlaylist);
-    
     socket.on('medialist updated', updateMedialist);
-    
-    socket.on('wait for song add', function(time){
-        alert('Please wait ' + time + ' seconds before adding next song');
+    socket.on('message', function(message) {
+        alert(message);
     });
     
+    var serverTimeoutCheck;
+    socket.on('server stats', function(stats) {
+        serverLastSeenOn = new Date();
+        
+        clearTimeout(serverTimeoutCheck);
+        $("#serverStatus").addClass("online");
+        $("#totalConnectedUsers").text(stats.totalConnectedUsers);
+        $("#totalSongs").text(stats.totalSongs);
+        
+        serverTimeoutCheck = setTimeout(function() {
+            var now = new Date();
+            
+            if ((now - serverLastSeenOn) > 2000) {
+                $("#serverStatus").removeClass("online");
+            }
+        }, 2000);
+    });
+
+    function showAlert(alertMessage,alertType){
+        var alertDiv = $("<div>").addClass("alert");
+        switch(alertType){
+            case "error":
+                alertDiv.addClass("alert-error");
+            break;
+            case "notice":
+                alertDiv.addClass("alert-info");
+            break;
+            case "success:":
+                alertDiv.addClass("alert-success");
+            break;
+            default :
+                alertDiv.addClass("alert-info");
+        }
+        $("#alert-container").append(alertDiv)
+
+    }
+
+    function addPlaylistItem(data){
+        var listItem = $("<div>").addClass("np-songinfo");
+        listItem.append("<div class='np-songtext'>"+data.path+"</div>");
+        listItem.append("<div class='icons'>");
+        $("#playlist").append(listItem);
+        return listItem;
+    }
+    
     function updatePlaylist(playlist){
+        var songItem;
         $("#playlist").empty();
         if (playlist.length === 0){
-            $("<li>").text("Playlist is empty").appendTo("#playlist");
+            addPlaylistItem({path:"Queue empty"});
         }else{
             for (var i = 0; i < playlist.length; i++){
                 var song = playlist[i];
-                var date = new Date(song.addedOn);
-                var text = '<span class="path">' + song.path + '</span> - '
-                            + '<span class="ip">' + song.addedByIP + '</span> - '
-                            + '<span class="date">' + date.toTimeString() + '</span>';
-                $("<li>").html(text).appendTo("#playlist");
+                songItem = addPlaylistItem(song);
+        
+                $("<a class='remove' href='javascript:void(0)'>").click(function(songIndex) {
+                    return function() {
+                        removeSong(songIndex);
+                    };
+                }(i)).appendTo(songItem.find(".icons"));
+                
+                if (song.addedByIP === "127.0.0.1") {
+                    //li.addClass("addedByServer");
+                    //li.children(".ip").text("Admin");
+                }
             }
         }
     }
@@ -45,11 +107,18 @@ $(function(){
                 (function(song){
                     var li = $("<li>").appendTo("#medialist");
                     $("<span>").text(medialist[i]).click(function(){
-                        socket.emit('song selected', song);
+                        socket.emit('song selected', {
+                            song: song,
+                            username: username
+                        });
                     }).appendTo(li);
                 })(medialist[i]);
             }
         }
+    }
+    
+    function removeSong(songIndex) {
+        socket.emit('song removed', songIndex);
     }
     
     $("#fileUpload").submit(function(event){
@@ -80,5 +149,11 @@ $(function(){
     
     $("#about span").click(function(){
         $("#about .content").slideToggle();
+    });
+    $("#upload-song").click(function(){
+        $('#uploadFile').trigger("click");
+    });
+    $("#uploadFile").bind("change",function(){
+        $("#upload").click();
     });
 });
