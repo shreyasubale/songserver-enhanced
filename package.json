@@ -1,14 +1,14 @@
 {
   "name": "songserver-enhanced",
-  "version": "0.0.1",
+  "version": "0.0.1-beta",
   "description": "ERROR: No README.md file found!",
   "main": "server.js",
   "dependencies": {
-    "formidable": "https://registry.npmjs.org/formidable/-/formidable-1.0.14.tgz",
-    "node-static": "",
-    "socket.io": "~0.9.14",
-    "optimist": "~0.4.0",
-    "musicmetadata": "~0.2.3"
+    "formidable": "1.0.x",
+    "node-static": "0.6.x",
+    "socket.io": "0.9.x",
+    "optimist": "0.5.x"
+	"musicmetadata": "~0.2.x"
   },
   "devDependencies": {},
   "scripts": {
