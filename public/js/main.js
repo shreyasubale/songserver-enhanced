@@ -25,7 +25,7 @@ $(function(){
     socket.on('playlist updated', updatePlaylist);
     socket.on('medialist updated', updateMedialist);
     socket.on('message', function(message) {
-        alert(message);
+        bootbox.alert(message);
     });
     
     var serverTimeoutCheck;
@@ -46,23 +46,18 @@ $(function(){
         }, 2000);
     });
 
-    function showAlert(alertMessage,alertType){
-        var alertDiv = $("<div>").addClass("alert");
-        switch(alertType){
-            case "error":
-                alertDiv.addClass("alert-error");
-            break;
-            case "notice":
-                alertDiv.addClass("alert-info");
-            break;
-            case "success:":
-                alertDiv.addClass("alert-success");
-            break;
-            default :
-                alertDiv.addClass("alert-info");
-        }
-        $("#alert-container").append(alertDiv)
 
+
+    function truncateText(text,length){
+        if(!length){
+            length = 70;
+        }
+        if(text && text.length > length){
+            return text.substring(0,length-3)+"..."; 
+        }else{
+            return text;
+        }
+        
     }
 
     function addPlaylistItem(data){
@@ -71,8 +66,8 @@ $(function(){
         var html = [
             "<div class='pl-albumart'></div>",
             "<div class='container-sd'>",
-                "<div class='np-songtext'>"+data.path+"</div>",
-                "<div class='addedBy'>Added By "+data.username+"</div>",
+                "<div class='np-songtext'>"+truncateText(data.path)+"</div>",
+                "<div class='addedBy'>Added By "+truncateText(data.username)+"</div>",
             "</div>",
             "<div class='icons'></div>"
         ];
@@ -147,7 +142,7 @@ $(function(){
         xhr.open("post", "upload");
         xhr.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
-                alert('upload complete');
+                bootbox.alert('upload complete');
                 $("#upload").fadeIn();
                 document.getElementById("uploadProgress").value = 0;
             }
