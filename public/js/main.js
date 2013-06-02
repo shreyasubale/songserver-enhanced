@@ -66,9 +66,23 @@ $(function(){
     }
 
     function addPlaylistItem(data){
+        
         var listItem = $("<div>").addClass("np-songinfo");
-        listItem.append("<div class='np-songtext'>"+data.path+"</div>");
-        listItem.append("<div class='icons'>");
+        var html = [
+            "<div class='pl-albumart'></div>",
+            "<div class='container-sd'>",
+                "<div class='np-songtext'>"+data.path+"</div>",
+                "<div class='addedBy'>Added By "+data.username+"</div>",
+            "</div>",
+            "<div class='icons'></div>"
+        ];
+        listItem.append(html.join(""));
+
+        //listItem.append("<div class='pl-albumart'></div>");
+        
+        //listItem.append("<div class='np-songtext'>"+data.path+"</div>");
+        //listItem.append("<div class='addedBy'>Added By"+data.username+"</div>");
+        //listItem.append("<div class='icons'>");
         $("#playlist").append(listItem);
         return listItem;
     }
@@ -156,4 +170,9 @@ $(function(){
     $("#uploadFile").bind("change",function(){
         $("#upload").click();
     });
+
+    // $(window).load(function(){
+    //     $('#playlist').mCustomScrollbar();
+    // });
+
 });
