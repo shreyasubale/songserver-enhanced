@@ -1,5 +1,6 @@
 body{
     font-family : "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: #CFCFCD;
 }
 
 h1{
@@ -24,9 +25,28 @@ h1{
     background-image: url("../img/glyphicons-halflings.png");
 }
 
+.playlist-header{
+    color : #ffffff;
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+    border-bottom: 1px dotted #ffffff;
+}
+
 #medialist li span:hover{
     background-color: #777;
     color: black;
+}
+
+.container-sd{
+    float:left;
+}
+.addedBy{
+    padding: 5px;
+}
+#playlist{
+    height: 461px;
+    overflow: auto;
 }
 
 #playlist .path{
@@ -111,14 +131,16 @@ form legend{
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#222222',GradientType=0 ); /* IE6-9 */ 
 }
 .rightSide{
-    background-color: #BBBBBB;
+    background-color: #999999;
     color: #333333;
     float: right;
     font-size: 12px;
-    height: 500px;
+    
     position: absolute;
+    overflow: hidden;
     right: 0;
-    top: 41px;
+    top: 40px;
+    width: 36%;
 }
 
 .np-albumart{
@@ -130,6 +152,23 @@ form legend{
     margin-right: 5px;
     float: left;
 }
+.pl-albumart{
+    float: left;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #000000;
+    margin : 5px;
+}
+
+/* Odd  */
+.np-songinfo:nth-child(2n+1){
+background-color: #7a7a7a;
+}
+/* even */
+.np-songinfo:nth-child(2n){
+background-color: #666666;
+}
+
 
 /*#serverStatus::after {
     content: 'Offline';
@@ -151,23 +190,23 @@ form legend{
 }
 .np-songinfo{
     float:left;
-    margin-top: 4px;
     margin-right: 2px;
-    height:45px;
-    left:61px;
-    top : 5px;
-    background:#1b1b1b;
-    border:solid 1px #000;
+    
+
+    width: 100%;
+    /*background:#1b1b1b;*/
+    /*border:solid 1px #000;
     -webkit-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
     -moz-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
     box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
     -webkit-border-radius:3px;
-    -moz-border-radius:3px;border-radius:3px;
+    -moz-border-radius:3px;border-radius:3px;*/
 }
 .np-songtext{
     color : #ffffff;
     font-size: 10px;
     font-weight: bold;
+    float: left;
     padding: 2px 5px 2px 5px;
 }
 
