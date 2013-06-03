@@ -333,7 +333,7 @@ var Controller = (function(view, model) {
             model.on('userInfo', function (user) {
                 view.setName(user.name);
                 console.log(user);
-                if (user.name.indexOf(user.ip) >= 0) {
+                if (user.name.indexOf(user.address) >= 0) {
                     view.getUserName();
                 }
             });
