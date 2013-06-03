@@ -107,7 +107,7 @@ var SongServer = (function () {
                 formData.append("addToQueue", true);
             }
 
-            xhr.open("post", "upload");
+            xhr.open("post", "/upload");
             xhr.onreadystatechange = function(){
                 if (this.readyState == 4 && this.status == 200) {
                    oThis.trigger("uploadSuccess", files);
@@ -206,6 +206,19 @@ var View = (function () {
                 
                 $this.addClass("active");
                 oThis.downVote(song);
+            });
+            
+            $("#fileUpload").submit(function (event) {
+                event.preventDefault();
+                $("#upload").fadeOut();
+                var files = document.getElementById("uploadFile").files;
+                oThis.trigger("songUpload", files);
+            });
+            $("#upload-song").click(function () {
+                $('#uploadFile').trigger("click");
+            });
+            $("#uploadFile").bind("change",function () {
+                $("#upload").click();
             });
         },
         
@@ -324,6 +337,9 @@ var Controller = (function(view, model) {
                     view.getUserName();
                 }
             });
+            model.on("uploadSuccess", function () {
+                alert("upload complete");
+            });
         },
         
         bindViewEvents: function () {
@@ -335,6 +351,9 @@ var Controller = (function(view, model) {
             view.on('upVote', this.onVote.bind(this, true));
             view.on("downVote", this.onVote.bind(this));
             view.on("search", this.onSearch.bind(this));
+            view.on("songUpload", function (files) {
+                model.uploadSongs(files);
+            });
         },
         
         onMediaListChange: function (list) {
