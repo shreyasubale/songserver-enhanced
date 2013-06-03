@@ -4,60 +4,81 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <title>Song Server</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="css/style.css" media="screen" />
+        <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="beta.css" media="screen" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css" />
         <script src="/socket.io/socket.io.js"></script>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="beta/main.js"></script>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="betaClient.js"></script>
     </head>
     <body>
-        <div class="leftSide">
-            <h1>Welcome to the Song Server</h1>
-            
-            <ul>
-                <li>Server Status: <span id="serverStatus"></span></li>
-                <li>Connected Users: <span id="totalConnectedUsers"></span></li>
-                <li>Total Songs: <span id="totalSongs"></span></li>
-            </ul>
-            
-            <div id="about">
-                <h2><span>About<span></h2>
-                <div class="content">
-                    <p>Pick a song from the Medialist to queue it in the Playlist.</p>
-                    <p>The source code is avaliable on 
-                        <a href="https://github.com/niloy/songserver">Github</a></p>
-                    <p>This project uses the following amazing techs:</p>
-                    <ul>
-                        <li><a href="http://nodejs.org/">NodeJS</a> 
-                        Server side Javascript. The server is written is JS as well.</li>
-                        <li><a href="http://socket.io/">Websockets</a> Notice the Media 
-                        and Playlist are updated in Real Time</li>
-                        <li><a href="http://www.mplayerhq.hu/design7/news.html">mplayer</a> 
-                            Command-line media player</a>
-                        <li>Linux</li>
-                        <li>HTML5</li>
-                    </ul>
-                </div>
+        <!-- Navigation -->
+        <div class="spacer"></div>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container-fluid">
+                <i class="icon-circle statusicon" id = "serverStatus"></i>
+              <a class="brand" href="#">SongServer v1.1</a>
+              <div class="nav-collapse collapse">
+
+                <ul class="nav">
+                  <li class="active"><a href="#">Home</a></li>
+                
+                </ul>
+                <a class="upload-song" id="upload-song">Upload Song(s)</a>
+                <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
+                    <input type="file" name="uploadFile" multiple id="uploadFile" />
+                    <input type="submit" value="Upload" id="upload" />
+                    <progress id="uploadProgress" max="100" value="0"></progress>
+                </form>
+                <div class="fr welcome">Welcome <span id="nameHolder"></span></div>
+              </div><!--/.nav-collapse -->
             </div>
+          </div>
+        </div>
+        
+        <!-- Body -->
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="container-fluid containerSection">
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <section class="row-fluid">
+                <div class="span6 playListHolder">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <h3 class="header">Playlist</h3>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <ul id="playList" class="scroll">
+                        
+                    </ul>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+                
+                <div class="span6 mediaListHolder">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <div class="header">
+                        <h3>Songs Available</h3>
+                        <input type="text"  placeholder="Search by Name/Album/Song" class="span10" />
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <ul id="mediaList" class="scroll">
+                    </ul>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+            </section>
+        </div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <section id="nowPlaying">
             
-            <h2>Playlist</h2>
-            <ol id="playlist">
-            </ol>
-        
-            <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
-                <legend>Upload a song (multiple selection is allowed)</legend>
-                <input type="file" name="uploadFile" multiple id="uploadFile" />
-                <input type="submit" value="Upload" id="upload" />
-                <progress id="uploadProgress" max="100" value="0"></progress>
-            </form>
-        </div>
-        
-        <div class="rightSide">
-            <h2>Medialist</h2>
-            <ul id="medialist">
-            </ul>
-        </div>
+        </section>
     </body>
 </html>
 
