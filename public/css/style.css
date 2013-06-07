@@ -7,8 +7,16 @@ h1{
     text-shadow: 0px 0px 10px gray;
 }
 
-#medialist li span{
+.modal{
+    color :#666666;
+}
 
+#medialist{
+    color : #333333;
+    margin: 0px;
+}
+#medialist li span{
+    
     cursor: pointer;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -43,6 +51,7 @@ h1{
 }
 .addedBy{
     padding: 5px;
+    clear : both;
 }
 #playlist{
     height: 461px;
@@ -106,7 +115,8 @@ form legend{
 }
 
 .leftSide{
-    position: fixed;
+    overflow:scroll;
+    width:64.5%;
     
 }
 

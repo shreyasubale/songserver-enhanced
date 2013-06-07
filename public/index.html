@@ -5,16 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <title>Song Server</title>
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="css/darkstrap.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="css/style.css" media="screen" />
         <link rel="stylesheet" href="css/font-awesome.min.css" />
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootbox.min.js"></script>
         <script src="js/main.js"></script>
     </head>
     <body>
         <!-- Navigation -->
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container-fluid">
                 <i class="icon-circle statusicon" id = "serverStatus"></i>
@@ -45,60 +47,24 @@
                 <div class='np-albumart'>
                     <img src="img/50_album.png" />
                 </div>
-               <!--  <span class="np-systext">Now Playing</span><br/> -->
-                <div id="playlist">
-                    <div class="np-songinfo">
-                        <div class="np-songtext">
-                            Test by Test
-                        </div>
-                    </div>
-                </div>
-                
+
             </div>
             <div class="leftSide">
-                <!-- <h1>Welcome to the Song Server</h1> -->
-                
-                <ul>
-                    <!-- <li>Server Status: <span id="serverStatus"></span></li> -->
-                    <li>Connected Users: <span id="totalConnectedUsers"></span></li>
-                    <li>Total Songs: <span id="totalSongs"></span></li>
+                <ul id="medialist">
                 </ul>
-                
-                <!-- <div id="about">
-                    <h2><span>About<span></h2>
-                    <div class="content">
-                        <p>Pick a song from the Medialist to queue it in the Playlist.</p>
-                        <p>The source code is avaliable on 
-                            <a href="https://github.com/niloy/songserver">Github</a></p>
-                        <p>This project uses the following amazing techs:</p>
-                        <ul>
-                            <li><a href="http://nodejs.org/">NodeJS</a> 
-                            Server side Javascript. The server is written is JS as well.</li>
-                            <li><a href="http://socket.io/">Websockets</a> Notice the Media 
-                            and Playlist are updated in Real Time</li>
-                            <li><a href="http://www.mplayerhq.hu/design7/news.html">mplayer</a> 
-                                Command-line media player</a>
-                            <li>Linux</li>
-                            <li>HTML5</li>
-                        </ul>
-                    </div>
-                </div> -->
-                
-                <!-- <h2>Playlist</h2>
-                <ol id="playlist">
-                </ol> -->
-            
-                <!-- <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
-                    <legend>Upload a song (multiple selection is allowed)</legend>
-                    <input type="file" name="uploadFile" multiple id="uploadFile" />
-                    <input type="submit" value="Upload" id="upload" />
-                    <progress id="uploadProgress" max="100" value="0"></progress>
-                </form> -->
             </div>
             
             <div class="rightSide">
-                <ul id="medialist">
-                </ul>
+                <div class='playlist-header'>Playlist</div>
+                <div id="playlist">
+
+                </div>
+
+                
+               <!--  <ul>
+                    <li>Connected Users: <span id="totalConnectedUsers"></span></li>
+                    <li>Total Songs: <span id="totalSongs"></span></li>
+                </ul> -->
             </div>
         </div>
     </body>
