@@ -13,6 +13,7 @@ h1{
 
 #medialist{
     color : #333333;
+    margin: 0px;
 }
 #medialist li span{
     
@@ -114,7 +115,8 @@ form legend{
 }
 
 .leftSide{
-    position: fixed;
+    overflow:scroll;
+    width:64.5%;
     
 }
 

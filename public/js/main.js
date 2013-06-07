@@ -171,7 +171,9 @@ $(function(){
         $(window).bind("resize",function(){
             var docHeight = $(window).height();
             $("#playlist").height(docHeight-120);
+            $("#leftSide").height(docHeight-120);
         });
+
         $(window).trigger("resize");
     });
 
