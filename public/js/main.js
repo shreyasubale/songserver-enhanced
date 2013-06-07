@@ -166,6 +166,15 @@ $(function(){
         $("#upload").click();
     });
 
+    $(document).ready(function(){
+        //adjust the height
+        $(window).bind("resize",function(){
+            var docHeight = $(window).height();
+            $("#playlist").height(docHeight-120);
+        });
+        $(window).trigger("resize");
+    });
+
     // $(window).load(function(){
     //     $('#playlist').mCustomScrollbar();
     // });
