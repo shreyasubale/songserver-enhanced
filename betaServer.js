@@ -56,21 +56,29 @@ server.listen(PORT);
 
 var websock = socketio.listen(server);
 
+websock.configure(function (){
+    websock.set('authorization', function (handshakeData, callback) {
+        songServer.connectUser(handshakeData.address.address, handshakeData.query.name);
+        callback(null, true);
+    });
+});
+
 websock.configure(function() {
     websock.disable('log');
 });
 
-songServer.on("medialistChange", function (list) {
-    websock.sockets.in('users').emit('medialist updated', list.toJSON());
+songServer.on("mediaListChange", function (list) {
+    websock.sockets.in('users').emit('mediaListChange', list.toJSON());
 });
 
-songServer.on("playlistChange", function (playlist) {
-    websock.sockets.in('users').emit('playlist updated', playlist.toJSON());
+songServer.on("playListChange", function (playlist) {
+    websock.sockets.in('users').emit('playListChange', playlist.toJSON());
 });
 
 songServer.on("nowPlaying", function (media) {
-    websock.sockets.in('users').emit('playlist updated', media.toJSON());
+    websock.sockets.in('users').emit('nowPlaying', media.toJSON());
 });
+
 
 
 
@@ -78,47 +86,39 @@ websock.sockets.on('connection', function(socket) {
     socket.join('users');
     
     var ip = socket.handshake.address.address;
+    
+    //console.log(socket);
 
     var user = songServer.connectUser(ip);
-    
+
     socket.emit('init', {
-        playlist: songServer.getPlayList().toJSON(),
-        medialist: songServer.getMediaList().toJSON(),
-        name: user.getName()
+        playList: songServer.getPlayList().toJSON(),
+        mediaList: songServer.getMediaList().toJSON(),
+        user: user.toJSON(),
+        nowPlaying: songServer.getCurrentMedia(true)
     });
 
-    socket.on('song selected', function (song) {
+    socket.on('songSelected', function (song) {
         var name = song.name;
         songServer.enqueue(name, user);
     });
     
-    socket.on('song removed', function(songIndex) {
+    socket.on('userNameChange', function (name) {
+        user.setName(name);
+    });
+    
+    socket.on('songRemoved', function(songIndex) {
         songServer.dequeue(song, user);
     });
+    
+    socket.on('upVote', function(song) {
+        songServer.upVote(song, user);
+    });
+    
+    socket.on('downVote', function(song) {
+        songServer.downVote(song, user);
+    });
 });
-
-// Send server stats
-//setInterval(function() {
-//    websock.sockets.in('users').emit('server stats', {
-//        totalConnectedUsers: countTotalUsers(),
-//        totalSongs: medialist.list.length
-//    });
-//}, 2000);
-
-//playlist.onCurrentSongComplete = function(){
-//    websock.sockets.in('users').emit('playlist updated', playlist.list);
-//};
-
-function countTotalUsers() {
-    var count = 0;
-    var users = websock.sockets.in('users').manager.connected;
-    
-    for (var u in users) {
-        count++;
-    }
-    
-    return count;
-}
 
 console.log('Server started on port: ' + PORT);
 

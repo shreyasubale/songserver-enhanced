@@ -1,0 +1,391 @@
+html, body{
+    height: 100%;
+    padding: 0;
+}
+
+
+body{
+    font-family : "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+body > * {
+    overflow: hidden;
+}
+
+.navbar {
+    height: 10%;
+}
+
+.spacer {
+    height: 1%;
+}
+
+.fr {
+    float: right;
+}
+
+h3 {
+    padding: 0;
+    margin: 0;
+    font-family: verdana;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.5);
+    line-height: 25px;
+}
+
+.welcome {
+    padding-top: 10px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.welcome #nameHolder {
+    color: #F66C00
+}
+
+
+.containerSection {
+    padding-top: 20px;
+    height: 84%;
+    background: #ddd;
+}
+
+.containerSection > .row-fluid {
+    height: 100%;
+}
+
+.containerSection > .row-fluid .playListHolder,
+.containerSection > .row-fluid .mediaListHolder {
+    height: 100%;
+}
+
+.containerSection > .row-fluid .playListHolder {
+    border-right: 1px solid #888;
+}
+
+
+#mediaList, #playList {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    font-size: 12px;
+    padding-right: 30px;
+}
+
+#mediaList li{
+    padding: 5px;
+    
+}
+
+#playList li {
+    border: 1px solid #ccc;
+    box-shadow: inset 1px 1px 10px rgba(0,0,0, 0.2);
+    background: #aaa;
+    padding: 5px;
+}
+
+#playList li a.voteIcon {
+    display: inline-block;
+    width: 32px;
+    margin-right: 10px;
+    text-align: center;
+    font-weight: bold;
+    float: left;
+    color: #444;
+}
+
+#playList li .skip {
+    display: none;
+}
+
+#playList li:first-child {
+    background: greenyellow !important; 
+}
+
+#playList li:first-child .skip {
+    display: block;
+}
+
+#playList li .skipIcon {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background: url("/img/skip.png") center center no-repeat;
+    margin-top: 5px;
+}
+
+#playList li a.voteIcon:hover {
+    text-decoration: none;
+}
+
+#playList li a.voteIcon.up {
+    background: url("/img/upVote-d.png") top left no-repeat;
+    padding-top: 30px;
+    float: left;
+}
+
+#playList li a.voteIcon.up.active,
+#playList li a.voteIcon.up:hover {
+    background-image: url("/img/upVote.png");
+    color: green;
+}
+
+#playList li a.voteIcon.down.active,
+#playList li a.voteIcon.down:hover {
+    background-image: url("/img/downVote.png");
+    color: red;
+}
+
+#playList li a.voteIcon.down {
+    background: url("/img/downVote-d.png") bottom left no-repeat;
+    padding-bottom: 30px;
+}
+
+.mediaListHolder .header {
+    height: 15%;
+}
+
+.playListHolder .header {
+    height: 5%;
+}
+
+
+#mediaList {
+    height: 78%;
+}
+
+#playList {
+    height: 87%;
+}
+
+#mediaList li,
+#playList li {
+    list-style: none;
+    padding: 5px;
+}
+
+#mediaList li span{
+    cursor: pointer;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+}
+
+#mediaList li span:hover{
+    background-color: #777;
+    color: black;
+}
+
+
+
+.scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+    
+    border-radius: 10px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+#playlist .path{
+    color: red;
+}
+
+.icons{
+    float:right;
+}
+.remove{
+    width: 20px ;
+    height : 20px;
+    background-position: 306px 65px;
+    display: block;
+    background-image: url("../img/glyphicons-halflings.png");
+}
+
+#playlist .ip{
+    color: green;
+}
+
+#playlist .addedByServer .ip {
+    color: orange;
+}
+
+#playlist .date{
+    color: blue;
+}
+
+form{
+    margin: 0px;
+   /* border: 1px solid black;
+    width: 400px;
+    padding: 10px;
+    box-shadow: 0 0 5px 5px #ddd;*/
+}
+
+form legend{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#uploadProgress {
+    border: 1px solid black;
+    display: block;
+    height: 26px;
+    position: absolute;
+    top: 6px;
+    width: 300px;
+}
+#uploadFile,#upload{
+    visibility: hidden;
+    z-index: -1;
+    position: absolute;
+}
+
+#about h2 span{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0;
+}
+
+#about .content{
+    display: none;
+    box-shadow: inset 0 0 5px 5px gold;
+    padding: 10px;
+}
+
+.leftSide{
+    position: fixed;
+    
+}
+
+
+#nowPlaying{
+    font-size: 12px;
+    border-top: 1px solid #000000;
+    bottom: 0;
+    height: 10%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    transition: all 0.3s ease 0s;
+    z-index: 11000;
+    background-color: #2C2C2C;
+    background: -moz-linear-gradient(top, #333333 0%, #222222 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#222222)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #333333 0%,#222222 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #333333 0%,#222222 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #333333 0%,#222222 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #333333 0%,#222222 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#222222',GradientType=0 ); /* IE6-9 */ 
+}
+
+.np-albumart{
+    display:block;
+    width: 50px;
+    height: 50px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    float: left;
+}
+
+/*#serverStatus::after {
+    content: 'Offline';
+    color: red;
+}*/
+
+.np-headertext{
+    font-size: 10px
+}
+
+.np-systext{
+    color: #bbbbbb;
+    font-size: 12px;
+    font-weight: bold;
+}
+.margin60{
+
+    margin-top: 60px;
+}
+.np-songinfo{
+    float:left;
+    margin-top: 4px;
+    margin-right: 2px;
+    height:45px;
+    left:61px;
+    top : 5px;
+    background:#1b1b1b;
+    border:solid 1px #000;
+    -webkit-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    box-shadow:0 1px 0 0 rgba(255, 255, 255, 0.05),inset 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;border-radius:3px;
+}
+.np-songtext{
+    color : #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px 2px 5px;
+}
+
+/*#serverStatus.online::after {
+    content: 'Online';
+    color: green;
+}*/
+
+#upload-song{
+    cursor: pointer;
+    background-color: #F66C00;
+    background: -moz-linear-gradient(top, #f77f00 0%, #f45000 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f77f00), color-stop(100%,#f45000)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f77f00 0%,#f45000 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f77f00 0%,#f45000 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f77f00 0%,#f45000 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #f77f00 0%,#f45000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f77f00', endColorstr='#f45000',GradientType=0 ); /* IE6-9 */
+    background-repeat: repeat-x;
+    border: 1px solid #AB3901;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+    -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+    filter:progid:DXImageTransform.Microsoft.dropshadow(
+        OffX=1px, OffY=1px, Color='black', Positive='true'
+    ); /* IE 5.5 */ 
+    border-collapse: separate; /* Required by IE 9 */
+    -webkit-border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -ms-border-radius: 3px 3px 3px 3px;
+    -o-border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    margin-top: 6px;
+    padding: 3px;
+    display: inline-block;
+}
+form{
+    display: inline-block;
+}
+.statusicon {
+    display: block;
+    float: left;
+    left: 4px;
+    position: absolute;
+    top: 13px;
+    color:#ff0000;
+}
+.online{
+    color:#00ff00;
+}
+
+
