@@ -163,11 +163,15 @@ var SongServer = (function () {
         },
         
         dequeue: function (song) {
-            socket.emit('songRemoved', song);
+            socket.emit('songRemoved', song.name);
         },
         
         filterMedia: function (keyword) {
             
+        },
+        
+        isMySong: function (song) {
+            return (song.user.address === user.address);
         },
         
         onMessage: function (msg, type) {
@@ -190,11 +194,19 @@ var View = (function () {
     return $.extend(EventEmitter(), {
         init: function () {
             var oThis = this;
-            playList = $("#playList");
-            mediaList = $("#mediaList");
+            playList = $("#playlist");
+            mediaList = $("#medialist");
+            
+            $(window).bind("resize",function(){
+                var docHeight = $(window).height();
+                playList.height(docHeight-120);
+                mediaList.height(docHeight-160);
+            });
+
+            $(window).trigger("resize");
             playList.on("click", ".up", function (e) {
                 var $this = $(this),
-                    song = $this.parents("li").data("songInfo");
+                    song = $this.parents(".np-songinfo").data("songInfo");
                 
                 $this.addClass("active");
                 oThis.upVote(song);
@@ -202,10 +214,17 @@ var View = (function () {
             
             playList.on("click", ".down", function (e) {
                 var $this = $(this),
-                    song = $this.parents("li").data("songInfo");
+                    song = $this.parents(".np-songinfo").data("songInfo");
                 
                 $this.addClass("active");
                 oThis.downVote(song);
+            });
+            
+            playList.on("click", ".remove", function (e) {
+                var $this = $(this),
+                    song = $this.parents(".np-songinfo").data("songInfo");
+                
+                oThis.onDequeue(song);
             });
             
             $("#fileUpload").submit(function (event) {
@@ -225,19 +244,21 @@ var View = (function () {
         renderMediaList: function (list) {
             mediaList.empty();
             list.forEach(function (item) {
-                var span = $("<span />");
+                var span = $("<span />"),
+                    li = $("<li />");
                 
                 span.text(item.name);
                 span.on("click", this.onEnqueue.bind(this, item));
-                mediaList.append($("<li />").append(span));
+                mediaList.append(li.append(span));
             }, this);
             
         },
         
-        renderPlayList: function (list) {
+        renderPlayList: function (songs) {
             playList.empty();
-            list.forEach(function (item) {
-                playList.append(this.getPlaylistItemDom(item));
+            songs.forEach(function (song) {
+                playList.append(this.getPlaylistItemDom(song,
+                    SongServer.isMySong(song))); //wrong approach
             }, this);
 
         },
@@ -288,20 +309,30 @@ var View = (function () {
             while (!username || username.trim().length < 3) {
                 username = prompt("Please enter your name");
             }
-            
             this.trigger('nameChange', username);
+            this.setName(username);
         },
         
-        getPlaylistItemDom: function (song) {
-            var dom = $("<li />").addClass("row-fluid");
+        getPlaylistItemDom: function (song, isMySong) {
+
+            var dom = $("<div>").addClass("np-songinfo"),
+                html;
             
-            dom.data("songInfo", song);
+            dom.data("songInfo", song).data("isMySong", isMySong);
+            html = [
+                "<div class='pl-albumart'></div>",
+                "<div class='container-sd'>",
+                    "<div class='np-songtext' title='" + song.name + "'>" + song.name + "</div>",
+                    "<div class='addedBy' title='" + song.user.name + "'>Added By ",
+                    song.user.name + "</div>",
+                "</div>"
+            ];
             
-            dom.html('<div class="span8"><strong>' + song.name + '</strong><br />' +
-                '<span>' + song.album + '</span><label>Added by: <span>' + song.user.name + 
-                '</span></label></div><div class="span2"><a href="#" class="voteIcon up">'+ song.likes +
-                '</a><a href="#" class="voteIcon down">' + song.dislikes + '</a></div><div class="span1 skip"><a href="#" class="skipIcon"></a></div>');
-            return dom;
+            if (isMySong) {
+                html.push("<div class='icons'><a class='remove' href='javascript:void(0)'></a></div>");
+            }
+            
+            return dom.append(html.join(""));
         }
     });
 
@@ -332,7 +363,6 @@ var Controller = (function(view, model) {
             model.on("nameChange", view.setName, view);
             model.on('userInfo', function (user) {
                 view.setName(user.name);
-                console.log(user);
                 if (user.name.indexOf(user.address) >= 0) {
                     view.getUserName();
                 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -13,9 +13,96 @@
         <script src="betaClient.js"></script>
     </head>
     <body>
-        <!-- Navigation -->
         <div class="spacer"></div>
         <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container-fluid">
+                <i class="icon-circle statusicon" id = "serverStatus"></i>
+              <a class="brand" href="#">SongServer v1.1</a>
+              <div class="nav-collapse collapse">
+
+                <ul class="nav">
+                  <li class="active"><a href="#">Home</a></li>
+                
+                </ul>
+                <a class="upload-song" id="upload-song">Upload Song(s)</a>
+                <form id="fileUpload" method="POST" action="upload" enctype="multipart/form-data">
+                    <input type="file" name="uploadFile" multiple id="uploadFile" />
+                    <input type="submit" value="Upload" id="upload" />
+                    <progress id="uploadProgress" max="100" value="0"></progress>
+                </form>
+                <div class="fr welcome">Welcome <span id="nameHolder"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="container-fluid containerSection">
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <section class="row-fluid">
+                <div class="span8 mediaListHolder">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <div class="header">
+                        <h3>Songs Available</h3>
+                        <input type="text"  placeholder="Search by Name/Album/Song" class="span10" />
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <ul id="mediaList" class="scroll">
+                    </ul>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+                
+                <div class="span4 playListHolder">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <h3 class="header">Playlist</h3>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                    <ul id="playList" class="scroll">
+                        
+                    </ul>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+                
+                
+            </section>
+        </div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <section id="nowPlaying">
+            
+        </section>
+    </body>
+</html>
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Song Server</title>
+        <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="/css/darkstrap.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="/css/style.css" media="screen" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="beta.css" media="screen" />
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/bootbox.min.js"></script>
+        <!--<script src="/js/main.js"></script>-->
+        <script src="betaClient.js"></script>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container-fluid">
                 <i class="icon-circle statusicon" id = "serverStatus"></i>
@@ -39,48 +126,30 @@
         </div>
         
         <!-- Body -->
-        <div class="spacer"></div>
-        <div class="spacer"></div>
-        <div class="container-fluid containerSection">
-            <div class="spacer"></div>
-            <div class="spacer"></div>
-            <section class="row-fluid">
-                <div class="span6 mediaListHolder">
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <div class="header">
-                        <h3>Songs Available</h3>
-                        <input type="text"  placeholder="Search by Name/Album/Song" class="span10" />
-                    </div>
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <ul id="mediaList" class="scroll">
-                    </ul>
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
+    
+        <div class="container-fluid margin60">
+            <div class="#alert-container">
+            </div>
+            <div id="now-playing">
+                <div class='np-albumart'>
+                    <img src="img/50_album.png" />
                 </div>
-                
-                <div class="span6 playListHolder">
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <h3 class="header">Playlist</h3>
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <ul id="playList" class="scroll">
-                        
-                    </ul>
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                </div>
-                
-                
-            </section>
-        </div>
-        <div class="spacer"></div>
-        <div class="spacer"></div>
-        <section id="nowPlaying">
+
+            </div>
+            <div class="leftSide">
+                <input type="text"  placeholder="Search by Name/Album/Song" class="span10" />
+                <ul id="medialist">
+                </ul>
+            </div>
             
-        </section>
+            <div class="rightSide">
+                <div class='playlist-header'>Playlist</div>
+                <div id="playlist">
+
+                </div>
+            </div>
+        </div>
     </body>
 </html>
+
 
