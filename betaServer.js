@@ -86,8 +86,6 @@ websock.sockets.on('connection', function(socket) {
     socket.join('users');
     
     var ip = socket.handshake.address.address;
-    
-    //console.log(socket);
 
     var user = songServer.connectUser(ip);
 
@@ -107,7 +105,7 @@ websock.sockets.on('connection', function(socket) {
         user.setName(name);
     });
     
-    socket.on('songRemoved', function(songIndex) {
+    socket.on('songRemoved', function(song) {
         songServer.dequeue(song, user);
     });
     
