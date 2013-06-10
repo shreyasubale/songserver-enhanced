@@ -97,8 +97,16 @@ websock.sockets.on('connection', function(socket) {
     });
 
     socket.on('songSelected', function (song) {
-        var name = song.name;
-        songServer.enqueue(name, user);
+        var name = song.name,
+            result;
+
+        result = songServer.enqueue(name, user);
+        if (result instanceof Error) {
+            socket.emit('error', {
+                message: result.message,
+                song: song
+            });
+        }
     });
     
     socket.on('userNameChange', function (name) {
@@ -106,7 +114,10 @@ websock.sockets.on('connection', function(socket) {
     });
     
     socket.on('songRemoved', function(song) {
-        songServer.dequeue(song, user);
+        var result = songServer.dequeue(song, user);
+        if (result instanceof Error) {
+            socket.emit('error', result);
+        }
     });
     
     socket.on('upVote', function(song) {
