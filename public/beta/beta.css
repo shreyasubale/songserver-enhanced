@@ -31,6 +31,39 @@
 
 .addedBy {
     padding: 3px 5px;
+    float: left;
+}
+
+.container-sd{
+    width: 60%;
+}
+
+.actionIcons {
+    float: right;
+}
+
+.actionIcons a{
+    color: #fff;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.actionIcons a:hover{
+    text-decoration: none;
+}
+
+.actionIcons .icon-thumbs-up.active {
+    color: #5bb75b;
+    text-shadow: 1px 1px 3px green;
+}
+
+.actionIcons .icon-thumbs-down.active {
+    color: #F66C00;
+    text-shadow: 1px 1px 3px #F45000;
+}
+
+.actionIcons a:before {
+    padding-right: 4px;
 }
 
 .scroll::-webkit-scrollbar {
@@ -46,6 +79,14 @@
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+#alert-container {
+    position: fixed;
+    top: 20px;
+    width: 50%;
+    left: 25%;
+    z-index: 2000;
 }
 
 /*html, body{
