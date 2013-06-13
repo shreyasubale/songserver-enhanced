@@ -1,66 +1,5 @@
 "use strict";
 
-var EventEmitter = function () {
-
-    return {
-        on: function (name, cb, ctx) {
-            var e = (this._events || (this._events = Object.create(null)));
-
-            e[name] = (e[name] || []);
-            e[name].push({
-                callback: cb,
-                context: ctx || null
-            });
-            return this;
-        },
-
-        off: function (name, cb) {
-            var callbacks,
-                retain;
-
-            if (arguments.length === 0) {
-                this._events = Object.create(null);
-                return;
-            }
-            if (!this._events || !this._events[name]) {
-                throw new Error("Invalid event --> " + name);
-            }
-            callbacks = this._events[name];
-
-            if (Array.isArray(callbacks)) {
-                this._events[name] = retain = [];
-                callbacks.forEach(function (obj) {
-                    if (cb !== obj.callback) {
-                        retain.push(obj);
-                    }
-                });
-            }
-        },
-
-        trigger: function (name) {
-            var args,
-                objs,
-                key;
-
-            if (this._events && (objs = this._events[name]) && Array.isArray(objs)) {
-                args = Array.prototype.slice.call(arguments, 1);
-                objs.forEach(function (obj) {
-                    obj.callback.apply(obj.context || null, args);
-                });
-            }
-            if (this._events && (objs = this._events.all) && Array.isArray(objs)) {
-                objs.forEach(function (obj) {
-                    obj.callback.apply(obj.context || null, arguments);
-                });
-            }
-        },
-
-        listenTo: function (name, cb) {
-            return app.Events.on(name, cb.bind(this));
-        }
-    };
-};
-
 var SongServer = (function () {
     
     var mediaList,
@@ -92,6 +31,7 @@ var SongServer = (function () {
             socket.on('mediaListChange', this.onMediaListChange.bind(this));
             socket.on("playListChange", this.onPlayListChange.bind(this));
             socket.on('nowPlaying', this.onSongStart.bind(this));
+            socket.on('error', this.trigger.bind(this, 'error'));
         },
         
         uploadSongs: function (files, addtoQueue) {
@@ -135,13 +75,14 @@ var SongServer = (function () {
         onInit: function (data) {
             user = data.user;
             this.trigger('userInfo', user);
+            localStorage.setItem("username", user.name);
             this.onMediaListChange(data.mediaList);
             this.onPlayListChange(data.playList);
             if (data.nowPlaying) {
                 this.onSongStart(data.nowPlaying);
             }
         },
-        
+
         getPlayList: function () {
             return playList;
         },
@@ -163,11 +104,17 @@ var SongServer = (function () {
         },
         
         dequeue: function (song) {
-            socket.emit('songRemoved', song);
+            socket.emit('songRemoved', song.name);
         },
         
-        filterMedia: function (keyword) {
-            
+        filterMedia: function (songs, keyword) {
+            return songs.filter(function (song) {
+                return (song.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
+            });
+        },
+        
+        isMySong: function (song) {
+            return (song.user.address === user.address);
         },
         
         onMessage: function (msg, type) {
@@ -176,132 +123,16 @@ var SongServer = (function () {
         
         onSongStart: function (song) {
             this.trigger("songStart", song);
-        }
-    });
+        },
 
-})();
-
-
-var View = (function () {
-    var playList,
-        mediaList;
-    
-    
-    return $.extend(EventEmitter(), {
-        init: function () {
-            var oThis = this;
-            playList = $("#playList");
-            mediaList = $("#mediaList");
-            playList.on("click", ".up", function (e) {
-                var $this = $(this),
-                    song = $this.parents("li").data("songInfo");
-                
-                $this.addClass("active");
-                oThis.upVote(song);
-            });
-            
-            playList.on("click", ".down", function (e) {
-                var $this = $(this),
-                    song = $this.parents("li").data("songInfo");
-                
-                $this.addClass("active");
-                oThis.downVote(song);
-            });
-            
-            $("#fileUpload").submit(function (event) {
-                event.preventDefault();
-                $("#upload").fadeOut();
-                var files = document.getElementById("uploadFile").files;
-                oThis.trigger("songUpload", files);
-            });
-            $("#upload-song").click(function () {
-                $('#uploadFile').trigger("click");
-            });
-            $("#uploadFile").bind("change",function () {
-                $("#upload").click();
-            });
-        },
-        
-        renderMediaList: function (list) {
-            mediaList.empty();
-            list.forEach(function (item) {
-                var span = $("<span />");
-                
-                span.text(item.name);
-                span.on("click", this.onEnqueue.bind(this, item));
-                mediaList.append($("<li />").append(span));
-            }, this);
-            
-        },
-        
-        renderPlayList: function (list) {
-            playList.empty();
-            list.forEach(function (item) {
-                playList.append(this.getPlaylistItemDom(item));
-            }, this);
-
-        },
-        
-        renderUploadComp: function (container) {
-        
-        },
-        
-        showMessage: function (msg, type) {
-        
-        },
-        
-        showNowPlaying: function () {
-        
-        },
-        
-        showNotification: function (message) {
-        
-        },
-        
-        onEnqueue: function (song) {
-            this.trigger("songSelected", song);
-        },
-        
-        onDequeue: function (song) {
-            this.trigger("songRemoved", song);
-        },
-        
-        upVote: function (song) {
-            this.trigger("upVote", song);
-        },
-        
-        downVote: function (song) {
-            this.trigger("downVote", song);
-        },
-        
-        onSearch: function (keyWord, isMedia) {
-            this.trigger("search", keyWord);
-        },
-        
-        setName: function (name) {
-            $("#nameHolder").text(name);
-        },
-        
-        getUserName: function () {
-            var username = "";
-
-            while (!username || username.trim().length < 3) {
-                username = prompt("Please enter your name");
+        userListHasMe: function (list) {
+            var i, length;
+            for (i = 0, length = list.length; i < length; i++) {
+                if (list[i].address === user.address) {
+                    return true;
+                }
             }
-            
-            this.trigger('nameChange', username);
-        },
-        
-        getPlaylistItemDom: function (song) {
-            var dom = $("<li />").addClass("row-fluid");
-            
-            dom.data("songInfo", song);
-            
-            dom.html('<div class="span8"><strong>' + song.name + '</strong><br />' +
-                '<span>' + song.album + '</span><label>Added by: <span>' + song.user.name + 
-                '</span></label></div><div class="span2"><a href="#" class="voteIcon up">'+ song.likes +
-                '</a><a href="#" class="voteIcon down">' + song.dislikes + '</a></div><div class="span1 skip"><a href="#" class="skipIcon"></a></div>');
-            return dom;
+            return false;
         }
     });
 
@@ -332,13 +163,14 @@ var Controller = (function(view, model) {
             model.on("nameChange", view.setName, view);
             model.on('userInfo', function (user) {
                 view.setName(user.name);
-                console.log(user);
                 if (user.name.indexOf(user.address) >= 0) {
                     view.getUserName();
                 }
             });
+            model.on('error', this.onError, this);
+            model.on('uploadProgress', view.showUploadProgress, view);
             model.on("uploadSuccess", function () {
-                alert("upload complete");
+                view.onUploadSuccess();
             });
         },
         
@@ -365,10 +197,10 @@ var Controller = (function(view, model) {
         },
         
         onSearch: function (keyword) {
-            this.searchKey = keyWord;
-            var result = model.filterMedia(keyword);
+            this.searchKey = keyword;
+            var result = model.filterMedia(model.getMediaList(), keyword);
             
-            this.onMediaListChange(null, result);
+            this.onMediaListChange(result);
         },
         
         onVote: function (isupVote, song) {
@@ -381,7 +213,7 @@ var Controller = (function(view, model) {
         },
         
         onEnqueue: function (song) {
-            console.log(song);
+           // console.log(song);
             model.enqueue(song);
         },
         
@@ -390,7 +222,7 @@ var Controller = (function(view, model) {
         },
         
         onSongStart: function (song) {
-            console.log("Start", song);
+            //console.log("Start", song);
             view.showNowPlaying(song);
         },
         
@@ -400,10 +232,23 @@ var Controller = (function(view, model) {
         
         onMessage: function (msg, type) {
             view.showMessage(msg, type || "info");
+        },
+        
+        onError: function (error) {
+            switch (error.message) {
+                case 'LimitReached':
+                    view.alert('You already got 5 songs queued, give others a chance!');
+                break;
+                case 'SongExists':
+                    view.showUpVoteDialog('Song already exist in queue', error.song);
+                break;
+                case 'Spam':
+                    view.alert("Whao, Dont SPAM! Please try after some time.");
+                break;
+            }
         }
         
     };
-    
 
 });
 
