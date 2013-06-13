@@ -86,8 +86,6 @@ websock.sockets.on('connection', function(socket) {
     socket.join('users');
     
     var ip = socket.handshake.address.address;
-    
-    //console.log(socket);
 
     var user = songServer.connectUser(ip);
 
@@ -99,16 +97,27 @@ websock.sockets.on('connection', function(socket) {
     });
 
     socket.on('songSelected', function (song) {
-        var name = song.name;
-        songServer.enqueue(name, user);
+        var name = song.name,
+            result;
+
+        result = songServer.enqueue(name, user);
+        if (result instanceof Error) {
+            socket.emit('error', {
+                message: result.message,
+                song: song
+            });
+        }
     });
     
     socket.on('userNameChange', function (name) {
         user.setName(name);
     });
     
-    socket.on('songRemoved', function(songIndex) {
-        songServer.dequeue(song, user);
+    socket.on('songRemoved', function(song) {
+        var result = songServer.dequeue(song, user);
+        if (result instanceof Error) {
+            socket.emit('error', result);
+        }
     });
     
     socket.on('upVote', function(song) {
