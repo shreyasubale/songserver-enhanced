@@ -77,6 +77,7 @@ songServer.on("playListChange", function (playlist) {
 
 songServer.on("nowPlaying", function (media) {
     websock.sockets.in('users').emit('nowPlaying', media.toJSON());
+    media.getInfo();
 });
 
 
@@ -121,11 +122,25 @@ websock.sockets.on('connection', function(socket) {
     });
     
     socket.on('upVote', function(song) {
-        songServer.upVote(song, user);
+        var result = songServer.upVote(song, user);
+        if (result instanceof Error) {
+            socket.emit('error', {
+		message: result.message,
+                song: song,
+                action: "upvote"
+	    });
+        }
     });
     
     socket.on('downVote', function(song) {
-        songServer.downVote(song, user);
+        var result = songServer.downVote(song, user);
+        if (result instanceof Error) {
+            socket.emit('error', {
+                message: result.message,
+                song: song,
+                action: "downvote"
+            });
+        }
     });
 });
 
