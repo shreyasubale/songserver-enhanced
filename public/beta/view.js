@@ -159,7 +159,7 @@ var View = (function () {
         },
         
         renderPlayList: function (songs) {
-            console.clear();
+            //console.clear();
             playList.empty();
             songs.forEach(function (song) {
                 var liked,
@@ -268,7 +268,7 @@ var View = (function () {
         },
         
         getPlaylistItemDom: function (song, isMySong, likedByMe, disLikedByMe) {
-            console.log(song.name, song.weightedRating);
+            //console.log(song.name, song.weightedRating);
             var dom = $("<div>").addClass("np-songinfo"),
                 container = $("<div>").addClass("container-sd"),
                 songname = $("<div>").addClass('np-songtext'),
