@@ -3,9 +3,7 @@
 var http = require('http');
 var staticServer = require('node-static');
 var socketio = require('socket.io');
-
 var formidable = require('formidable');
-
 var fileServer = new staticServer.Server(__dirname + '/public');
 
 var argv = require('optimist')
@@ -14,6 +12,8 @@ var argv = require('optimist')
     .describe('p', 'Port to start server on')
     .alias('m', 'media')
     .describe('m', 'The media folder(where songs will be stored) ex : -m "/media"')
+    .alias('a', 'adminlist')
+    .describe('m', 'Admin ip list seperated by comma ex : -a "172.16.4.2,172.16.3.2"')
     .argv
 ;
 
@@ -21,11 +21,13 @@ var argv = require('optimist')
 
 var PORT = argv.port || 8085;
 var mediaFolder = argv.media || "/media/";
+var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
 
 var SongServer = require('./lib/songServer.js');
 
 var songServer = new SongServer({
-    directory: __dirname + mediaFolder
+    directory: __dirname + mediaFolder,
+    adminlist : adminList
 });
 
 
