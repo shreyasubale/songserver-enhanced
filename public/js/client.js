@@ -114,7 +114,7 @@ var SongServer = (function () {
         },
         
         isMySong: function (song) {
-            return (song.user.address === user.address);
+            return (song.user.address === user.address) || (user.isAdmin && user.isAdmin===true);
         },
         
         onMessage: function (msg, type) {
