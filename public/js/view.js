@@ -152,7 +152,10 @@ var View = (function () {
                     li = $("<li />"),
 		    downLink = $('<a class="icon-download"/> </a>');
 
-		downLink.attr("href", "/mediaFiles/" + item.name);
+		downLink.attr({
+		    "href": "/mediaFiles/" + item.name,
+		    "title": "Download " + item.name
+		});
                 
                 span.text(item.name);
                 span.on("click", this.onEnqueue.bind(this, item));
