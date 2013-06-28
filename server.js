@@ -22,7 +22,7 @@ var argv = require('optimist')
 var PORT = argv.port || 8085;
 var mediaFolder = argv.media || "/media/";
 var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
-
+var mediaServer = new staticServer.Server(__dirname + mediaFolder);
 var SongServer = require('./lib/songServer.js');
 
 var songServer = new SongServer({
@@ -50,6 +50,10 @@ var server = http.createServer(function (request, response) {
         } catch(ex) {
             console.log(ex);
         }
+    } else if (request.url.indexOf("/mediaFiles") === 0) {
+	var url = request.url.replace("/mediaFiles/", "");
+	mediaServer.serveFile(decodeURIComponent(url), 200,
+		{'Content-disposition': 'attachment; filename=' + url}, request, response);
     } else {
         fileServer.serve(request, response);
     }
