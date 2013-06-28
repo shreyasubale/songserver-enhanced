@@ -245,6 +245,9 @@ var Controller = (function(view, model) {
                 case 'Spam':
                     view.alert("Whao, Dont SPAM! Please try after some time.");
                 break;
+                case 'conflict':
+		    view.alert("You cannot " + error.action + " your own song.");
+                break;
             }
         }
         
