@@ -92,7 +92,7 @@ var View = (function () {
                 var $this = $(this),
                     song = $this.parents(".np-songinfo").data("songInfo");
                 
-                $this.addClass("active");
+//                $this.addClass("active");
                 oThis.upVote(song);
                 e.preventDefault();
             });
@@ -101,7 +101,7 @@ var View = (function () {
                 var $this = $(this),
                     song = $this.parents(".np-songinfo").data("songInfo");
                 
-                $this.addClass("active");
+  //              $this.addClass("active");
                 oThis.downVote(song);
                 e.preventDefault();
             });
@@ -149,10 +149,14 @@ var View = (function () {
             mediaList.empty();
             list.forEach(function (item) {
                 var span = $("<span />"),
-                    li = $("<li />");
+                    li = $("<li />"),
+		    downLink = $('<a class="icon-download"/> </a>');
+
+		downLink.attr("href", "/mediaFiles/" + item.name);
                 
                 span.text(item.name);
                 span.on("click", this.onEnqueue.bind(this, item));
+		li.append(downLink);
                 mediaList.append(li.append(span));
             }, this);
             
