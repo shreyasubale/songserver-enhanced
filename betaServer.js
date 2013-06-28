@@ -20,10 +20,10 @@ var argv = require('optimist')
 /* Setting Defaults */
 
 var PORT = argv.port || 8085;
-var mediaFolder = argv.media || "/media/";
+var mediaFolder = argv.media || "/media";
 
 var SongServer = require('./lib/songServer.js');
-
+var mediaFileServer = new staticServer.Server(__dirname + mediaFolder);
 var songServer = new SongServer({
     directory: __dirname + mediaFolder
 });
@@ -46,8 +46,10 @@ var server = http.createServer(function (request, response) {
                 }
             });
         } catch(ex) {
-            console.log(ex);
+            cme +onsole.log(ex);
         }
+    } else if (request.url.indexOf("/mediaFiles") === 0) {
+	mediaFileServer.serve(request, response);
     } else {
         fileServer.serve(request, response);
     }
