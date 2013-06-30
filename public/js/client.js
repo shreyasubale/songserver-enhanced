@@ -16,8 +16,12 @@ var SongServer = (function () {
         
         setName: function (name) {
             username = name.trim();
-            localStorage.setItem("username", name);
+            this._setName(name);
             socket.emit('userNameChange', name);
+        },
+        
+        _setName: function (name) {
+            localStorage.setItem("username", name);
         },
         
         init: function () {
@@ -25,13 +29,23 @@ var SongServer = (function () {
         },
         
         bindSocketEvents: function () {
-            socket = io.connect(null, {query: "name=" + this.getName()});
+            var oThis = this;
+
+            socket = io.connect(null, {
+                query: "name=" + this.getName() + "&ip=" + localStorage.getItem("_oldSSIP"),
+                "sync disconnect on unload": true
+            });
             socket.on('init', this.onInit.bind(this));
             socket.on('message', this.onMessage, this);
             socket.on('mediaListChange', this.onMediaListChange.bind(this));
             socket.on("playListChange", this.onPlayListChange.bind(this));
             socket.on('nowPlaying', this.onSongStart.bind(this));
             socket.on('error', this.trigger.bind(this, 'error'));
+            socket.on('end', this.trigger.bind(this, 'songEnd'));
+            socket.on('disconnect', function () {
+                localStorage.setItem("_oldSSIP", user.address);
+                oThis.setName(user.name);
+            });
         },
         
         uploadSongs: function (files, addtoQueue) {
@@ -114,8 +128,12 @@ var SongServer = (function () {
         },
         
         isMySong: function (song) {
-            return (song.user.address === user.address) || (user.isAdmin && user.isAdmin===true);
+            return (song.user.address === user.address);
         },
+
+	isAdminUser: function () {
+	    return user.isAdmin;
+	},
         
         onMessage: function (msg, type) {
             this.trigger("message", msg, type);
@@ -133,7 +151,11 @@ var SongServer = (function () {
                 }
             }
             return false;
-        }
+        },
+
+	skipSong: function () {
+	    socket.emit('skipSong');
+	}
     });
 
 })();
@@ -186,6 +208,7 @@ var Controller = (function(view, model) {
             view.on("songUpload", function (files) {
                 model.uploadSongs(files);
             });
+	    view.on('skipSong', this.onSkip.bind(this));
         },
         
         onMediaListChange: function (list) {
@@ -225,9 +248,13 @@ var Controller = (function(view, model) {
             //console.log("Start", song);
             view.showNowPlaying(song);
         },
+
+	onSkip: function () {
+            model.skipSong();
+	},
         
         onSongEnd: function () {
-            view.songComplete(song);
+            view.songComplete();
         },
         
         onMessage: function (msg, type) {
@@ -246,8 +273,14 @@ var Controller = (function(view, model) {
                     view.alert("Whao, Dont SPAM! Please try after some time.");
                 break;
                 case 'conflict':
-		    view.alert("You cannot " + error.action + " your own song.");
+                    view.alert("You cannot " + error.action + " your own song.");
                 break;
+                case "permission":
+                    view.alert("You don't have enough permissions to do this operation");
+                break;
+                default:
+                    console.log("error", arguments);
+                 break;
             }
         }
         
