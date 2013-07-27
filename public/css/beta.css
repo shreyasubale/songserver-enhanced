@@ -21,6 +21,15 @@
     overflow-y: auto;
 }
 
+.skip {
+    font-size: 20px;
+    float: left;
+    margin: 3px 5px;
+}
+.skip:hover {
+    text-decoration: none;
+}
+
 .np-songtext,
 .addedBy {
     max-width: 250px;
@@ -87,6 +96,10 @@
     width: 50%;
     left: 25%;
     z-index: 2000;
+}
+
+a.icon-download:hover{
+    text-decoration: none;
 }
 
 /*html, body{
