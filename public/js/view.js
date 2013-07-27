@@ -92,7 +92,6 @@ var View = (function () {
                 var $this = $(this),
                     song = $this.parents(".np-songinfo").data("songInfo");
                 
-                $this.addClass("active");
                 oThis.upVote(song);
                 e.preventDefault();
             });
@@ -101,7 +100,6 @@ var View = (function () {
                 var $this = $(this),
                     song = $this.parents(".np-songinfo").data("songInfo");
                 
-                $this.addClass("active");
                 oThis.downVote(song);
                 e.preventDefault();
             });
@@ -112,7 +110,10 @@ var View = (function () {
                 
                 oThis.onDequeue(song);
             });
-            
+	    
+	    np.on("click", ".icon-step-forward", function (e) {
+		oThis.trigger("skipSong");
+	    });            
 
         },
         
@@ -149,10 +150,17 @@ var View = (function () {
             mediaList.empty();
             list.forEach(function (item) {
                 var span = $("<span />"),
-                    li = $("<li />");
+                    li = $("<li />"),
+		    downLink = $('<a class="icon-download"/> </a>');
+
+		downLink.attr({
+		    "href": "/mediaFiles/" + item.name,
+		    "title": "Download " + item.name
+		});
                 
                 span.text(item.name);
                 span.on("click", this.onEnqueue.bind(this, item));
+		li.append(downLink);
                 mediaList.append(li.append(span));
             }, this);
             
@@ -184,6 +192,9 @@ var View = (function () {
                     song.user.name + "</div>",
                  '</div>',
             ];
+	    if (SongServer.isAdminUser()) {
+		dom.splice(5, 0, '<a href="#" title="Skip Song" class="icon-step-forward skip"></a>')
+	    }
             np.empty().append(dom.join(""));
         },
         
@@ -202,6 +213,10 @@ var View = (function () {
         showNotification: function (message) {
         
         },
+
+	songComplete: function () {
+	    np.empty();
+	},
         
         showUploadProgress: function (val) {
             progressBar.css("width", val + "%");
@@ -312,7 +327,7 @@ var View = (function () {
             container.append(songname, wrapper);
             dom.append(container);
             
-            if (isMySong) {
+            if (isMySong || SongServer.isAdminUser()) {
                 dom.append("<div class='icons'><a class='remove' href='javascript:void(0)'></a></div>");
             }
             
