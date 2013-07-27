@@ -266,7 +266,7 @@ var View = (function () {
             this.trigger('nameChange', username);
             this.setName(username);
         },
-        
+
         getPlaylistItemDom: function (song, isMySong, likedByMe, disLikedByMe) {
             //console.log(song.name, song.weightedRating);
             var dom = $("<div>").addClass("np-songinfo"),

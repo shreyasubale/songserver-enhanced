@@ -14,6 +14,8 @@ var argv = require('optimist')
     .describe('m', 'The media folder(where songs will be stored) ex : -m "/media"')
     .alias('a', 'adminlist')
     .describe('m', 'Admin ip list seperated by comma ex : -a "172.16.4.2,172.16.3.2"')
+    .alias('c', 'playerClient')
+    .describe('c', 'The Player to be used ex: -c "mpd", -c "mplayer", Default : mplayer')
     .argv
 ;
 
@@ -22,12 +24,14 @@ var argv = require('optimist')
 var PORT = argv.port || 8085;
 var mediaFolder = argv.media || "/media/";
 var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
+var playerClient = argv.playerClient?argv.playerClient : "mplayer";
 
 var SongServer = require('./lib/songServer.js');
 
 var songServer = new SongServer({
     directory: __dirname + mediaFolder,
-    adminlist : adminList
+    adminlist : adminList,
+    playerClient : playerClient
 });
 
 
