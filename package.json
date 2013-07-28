@@ -1,14 +1,15 @@
 {
   "name": "songserver-enhanced",
   "version": "0.0.1",
-  "description": "ERROR: No README.md file found!",
+  "description": "Song Server - Central playlist manager",
   "main": "server.js",
   "dependencies": {
     "formidable": "1.0.x",
-    "node-static": "0.6.x",
+    "node-static": "x",
     "socket.io": "0.9.x",
     "optimist": "0.5.x",
-    "musicmetadata": "~0.2.x"
+    "musicmetadata": "~0.2.3",
+    "winston": "~0.7.x"
   },
   "devDependencies": {},
   "scripts": {
