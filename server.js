@@ -4,6 +4,7 @@ var http = require('http');
 var staticServer = require('node-static');
 var socketio = require('socket.io');
 var formidable = require('formidable');
+var logger = require("./lib/logger.js");
 var fileServer = new staticServer.Server(__dirname + '/public');
 
 var argv = require('optimist')
@@ -34,9 +35,6 @@ var songServer = new SongServer({
     playerClient : playerClient
 });
 
-
-
-
 var server = http.createServer(function (request, response) {
     if (request.url === '/upload') {
         var form = new formidable.IncomingForm();
@@ -52,7 +50,7 @@ var server = http.createServer(function (request, response) {
                 }
             });
         } catch(ex) {
-            console.log(ex);
+            logger.error(ex);
         }
     } else if (request.url.indexOf("/mediaFiles") === 0) {
         var url = request.url.replace("/mediaFiles/", "");
@@ -98,7 +96,7 @@ var sendStats = (function () {
     return function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
-            console.log (songServer.getStats());
+            logger.log (songServer.getStats());
             //websock.sockets.in('users').emit('stats', songServer.getStats());
         }, 3000);
     };
@@ -181,5 +179,5 @@ websock.sockets.on('connection', function(socket) {
     });
 });
 
-console.log('Server started on port: ' + PORT);
+logger.info('Server started on port: ' + PORT);
 
