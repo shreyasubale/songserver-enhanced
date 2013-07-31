@@ -1,4 +1,3 @@
-
 [Installation]
 
 Checkout / Download and in the project's directory enter :
@@ -16,6 +15,7 @@ npm server.js
 [options]
 
 -m , --media : The media folder ( folder where media will be stored ) 
--p , --port : The port server will listen on 
+-p , --port : The port server will listen on
+-a , --adminips : Admin Ips , seperated by , eg : -a "127.0.0.1,192.168.1.1"
 
 defaults : port 8085 , media folder : media
