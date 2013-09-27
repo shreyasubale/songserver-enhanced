@@ -96,7 +96,8 @@ var sendStats = (function () {
     return function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
-            logger.log (songServer.getStats());
+            console.log(songServer.getStats());
+	    logger.log('info',songServer.getStats());
             //websock.sockets.in('users').emit('stats', songServer.getStats());
         }, 3000);
     };
