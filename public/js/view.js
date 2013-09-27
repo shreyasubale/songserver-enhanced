@@ -305,6 +305,10 @@ var View = (function () {
             } else if (disLikedByMe) {
                 dislike.addClass('active');
             }
+
+            if(song.user.isAdmin){
+                addedBy.addClass("adminUser");
+            }
             
             if (song.likes) {
                 like.tooltip({
