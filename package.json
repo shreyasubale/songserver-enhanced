@@ -9,7 +9,8 @@
     "socket.io": "0.9.x",
     "optimist": "0.5.x",
     "musicmetadata": "~0.2.3",
-    "winston": "~0.7.x"
+    "winston": "~0.7.x",
+    "mpd": "~1.0.1"
   },
   "devDependencies": {},
   "scripts": {

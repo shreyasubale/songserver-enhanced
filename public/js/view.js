@@ -182,10 +182,15 @@ var View = (function () {
             }, this);
 
         },
-        
+
+        _getAlbumArt: function (song) {
+            return song.info.nameHash===null?"/img/50_album.png":"/albumart/"+song.info.nameHash+".jpg";
+        },
+
         showNowPlaying: function (song) {
+            var albumArt = this._getAlbumArt(song);
             var dom = [
-                '<div class="np-albumart"><img src="/img/50_album.png" /></div>',
+                '<div class="np-albumart"><img src="'+albumArt+'" /></div>',
                 '<div class="container-sd">',
                     "<div class='np-songtext' title='" + song.name + "'>" + song.name + "</div>",
                     "<div class='addedBy' title='" + song.user.name + "'>Added By ",
@@ -284,17 +289,18 @@ var View = (function () {
 
         getPlaylistItemDom: function (song, isMySong, likedByMe, disLikedByMe) {
             //console.log(song.name, song.weightedRating);
+            var albumArt = this._getAlbumArt(song);
             var dom = $("<div>").addClass("np-songinfo"),
                 container = $("<div>").addClass("container-sd"),
                 songname = $("<div>").addClass('np-songtext'),
                 addedBy = $("<div>").addClass("addedBy"),
                 like = $("<a href='#'>").addClass('icon-thumbs-up'),
                 dislike = $("<a href='#'>").addClass('icon-thumbs-down'),
+                albumArt = $('<div class="pl-albumart">').append("<img src='"+albumArt+"'>"),
                 wrapper = $("<div>");
             
             dom.data("songInfo", song).data("isMySong", isMySong);
-            dom.append('<div class="pl-albumart"></div>')
-
+            dom.append(albumArt);
             songname.text(song.name).attr("title", song.name);
             addedBy.text("Added by " + song.user.name).attr("title", song.user.name);
             like.text(song.likes);
