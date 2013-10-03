@@ -17,6 +17,8 @@ var argv = require('optimist')
     .describe('m', 'Admin ip list seperated by comma ex : -a "172.16.4.2,172.16.3.2"')
     .alias('c', 'playerClient')
     .describe('c', 'The Player to be used ex: -c "mpd", -c "mplayer", Default : mplayer')
+    .alias('r', 'albumart')
+    .describe('r', 'The albumart folder, to store albumart files')
     .argv
 ;
 
@@ -24,6 +26,7 @@ var argv = require('optimist')
 
 var PORT = argv.port || 8085;
 var mediaFolder = argv.media || "/media/";
+var albumartFolder = argv.albumart || "albumart/";
 var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
 var mediaServer = new staticServer.Server(__dirname + mediaFolder);
 var playerClient = argv.playerClient?argv.playerClient : "mplayer";
