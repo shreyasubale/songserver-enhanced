@@ -30,13 +30,17 @@ var albumartFolder = argv.albumart || "albumart/";
 var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
 var mediaServer = new staticServer.Server(__dirname + mediaFolder);
 var playerClient = argv.playerClient?argv.playerClient : "mplayer";
+var TagManager = require("./lib/tagManager.js");
 var SongServer = require('./lib/songServer.js');
+
+
 
 var songServer = new SongServer({
     directory: __dirname + mediaFolder,
     adminList : adminList,
     playerClient : playerClient
 });
+var tagManager = new TagManager();
 
 var server = http.createServer(function (request, response) {
     if (request.url === '/upload') {
@@ -47,6 +51,7 @@ var server = http.createServer(function (request, response) {
                     songServer.saveSongs(files);
                     songServer.once("songsSaved", function () {
                         response.end('ok');
+                        tagManager.parseFiles(files);
                     });
                 } else {
                     response.end('error');
