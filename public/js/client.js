@@ -122,6 +122,7 @@ var SongServer = (function () {
         },
         
         filterMedia: function (songs, keyword) {
+            //keyword = keyword.split(":");
             return songs.filter(function (song) {
                 return (song.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
             });
