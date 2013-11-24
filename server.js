@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 var http = require('http');
 var staticServer = require('node-static');
 var socketio = require('socket.io');
 var formidable = require('formidable');
-var logger = require("./lib/logger.js");
+var logger = require('./lib/logger.js');
 var fileServer = new staticServer.Server(__dirname + '/public');
 
 var argv = require('optimist')
@@ -19,26 +19,24 @@ var argv = require('optimist')
     .describe('c', 'The Player to be used ex: -c "mpd", -c "mplayer", Default : mplayer')
     .alias('r', 'albumart')
     .describe('r', 'The albumart folder, to store albumart files')
-    .argv
-;
+    .argv;
 
 /* Setting Defaults */
 
 var PORT = argv.port || 8085;
-var mediaFolder = argv.media || "/media/";
-var albumartFolder = argv.albumart || "albumart/";
-var adminList = (argv.adminlist && argv.adminlist.split(",")) || [];
+var mediaFolder = argv.media || '/media/';
+var albumartFolder = argv.albumart || 'albumart/';
+var adminList = (argv.adminlist && argv.adminlist.split(',')) || [];
 var mediaServer = new staticServer.Server(__dirname + mediaFolder);
-var playerClient = argv.playerClient?argv.playerClient : "mplayer";
-//var TagManager = require("./lib/tagManager.js");
+var playerClient = argv.playerClient ? argv.playerClient : 'mplayer';
+//var TagManager = require('./lib/tagManager.js');
 var SongServer = require('./lib/songServer.js');
-
 
 
 var songServer = new SongServer({
     directory: __dirname + mediaFolder,
-    adminList : adminList,
-    playerClient : playerClient
+    adminList: adminList,
+    playerClient: playerClient
 });
 //var tagManager = new TagManager();
 
@@ -46,21 +44,21 @@ var server = http.createServer(function (request, response) {
     if (request.url === '/upload') {
         var form = new formidable.IncomingForm();
         try {
-            form.parse(request, function(err, fields, files){
+            form.parse(request, function (err, fields, files) {
                 if (!err) {
                     songServer.saveSongs(files);
-                    songServer.once("songsSaved", function () {
+                    songServer.once('songsSaved', function () {
                         response.end('ok');
                     });
                 } else {
                     response.end('error');
                 }
             });
-        } catch(ex) {
+        } catch (ex) {
             logger.error(ex);
         }
-    } else if (request.url.indexOf("/mediaFiles") === 0) {
-        var url = request.url.replace("/mediaFiles/", "");
+    } else if (request.url.indexOf('/mediaFiles') === 0) {
+        var url = request.url.replace('/mediaFiles/', '');
         mediaServer.serveFile(decodeURIComponent(url), 200,
             {'Content-disposition': 'attachment; filename=' + url}, request, response);
     } else {
@@ -71,7 +69,7 @@ server.listen(PORT);
 
 var websock = socketio.listen(server);
 
-websock.configure(function (){
+websock.configure(function () {
     websock.disable('log');
     websock.set('authorization', function (handshakeData, callback) {
         var query = handshakeData.query;
@@ -80,40 +78,40 @@ websock.configure(function (){
     });
 });
 
-songServer.on("mediaListChange", function (list) {
-    websock.sockets.in('users').emit('mediaListChange', list.toJSON());
-    sendStats();
-});
-
-songServer.on("playListChange", function (playlist) {
-    websock.sockets.in('users').emit('playListChange', playlist.toJSON());
-    sendStats();
-});
-
-songServer.on("nowPlaying", function (media) {
-    websock.sockets.in('users').emit('nowPlaying', media.toJSON());
-});
-
-songServer.on("end", function (media) {
-    websock.sockets.in('users').emit('end', media.toJSON());
-});
-
 var sendStats = (function () {
     var timer;
     return function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
             console.log(songServer.getStats());
-	    logger.log('info',songServer.getStats());
+            logger.log('info' + songServer.getStats());
             //websock.sockets.in('users').emit('stats', songServer.getStats());
         }, 3000);
     };
 })();
 
+songServer.on('mediaListChange', function (list) {
+    websock.sockets.in('users').emit('mediaListChange', list.toJSON());
+    sendStats();
+});
 
-websock.sockets.on('connection', function(socket) {
+songServer.on('playListChange', function (playlist) {
+    websock.sockets.in('users').emit('playListChange', playlist.toJSON());
+    sendStats();
+});
+
+songServer.on('nowPlaying', function (media) {
+    websock.sockets.in('users').emit('nowPlaying', media.toJSON());
+});
+
+songServer.on('end', function (media) {
+    websock.sockets.in('users').emit('end', media.toJSON());
+});
+
+
+websock.sockets.on('connection', function (socket) {
     socket.join('users');
-    
+
     var ip = socket.handshake.address.address;
 
     var user = songServer.connectUser(ip);
@@ -125,7 +123,7 @@ websock.sockets.on('connection', function(socket) {
         user: user.toJSON(),
         nowPlaying: songServer.getCurrentMedia(true)
     });
-    
+
     socket.on('disconnect', function () {
         songServer.disConnectUser(user);
         sendStats();
@@ -143,12 +141,12 @@ websock.sockets.on('connection', function(socket) {
             });
         }
     });
-    
+
     socket.on('userNameChange', function (name) {
         user.setName(name);
     });
-    
-    socket.on('songRemoved', function(song) {
+
+    socket.on('songRemoved', function (song) {
         var result = songServer.dequeue(song, user);
         if (result instanceof Error) {
             socket.emit('error', result);
@@ -163,25 +161,25 @@ websock.sockets.on('connection', function(socket) {
             });
         }
     });
-    
-    socket.on('upVote', function(song) {
+
+    socket.on('upVote', function (song) {
         var result = songServer.upVote(song, user);
         if (result instanceof Error) {
             socket.emit('error', {
-		message: result.message,
+                message: result.message,
                 song: song,
-                action: "upvote"
-	    });
+                action: 'upvote'
+            });
         }
     });
-    
-    socket.on('downVote', function(song) {
+
+    socket.on('downVote', function (song) {
         var result = songServer.downVote(song, user);
         if (result instanceof Error) {
             socket.emit('error', {
                 message: result.message,
                 song: song,
-                action: "downvote"
+                action: 'downvote'
             });
         }
     });
