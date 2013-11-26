@@ -1,28 +1,29 @@
 {
-  "name": "songserver-enhanced",
-  "version": "0.0.1",
-  "description": "Song Server - Central playlist manager",
-  "main": "server.js",
-  "dependencies": {
-    "formidable": "1.0.x",
-    "node-static": "x",
-    "socket.io": "0.9.x",
-    "optimist": "0.5.x",
-    "musicmetadata": "~0.2.3",
-    "winston": "~0.7.x",
-    "mpd": "~1.0.1"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shreyasubale/songserver-enhanced.git"
-  },
-  "author": "Shreyas Ubale",
-  "license": "BSD",
-  "gitHead": "8f8719110c45e9701bbf8e03e5935bfac4de7781",
-  "readmeFilename": "README"
+    "name": "songserver-enhanced",
+    "version": "0.0.1",
+    "description": "Song Server - Central playlist manager",
+    "main": "server.js",
+    "dependencies": {
+        "formidable": "1.0.x",
+        "node-static": "x",
+        "socket.io": "0.9.x",
+        "optimist": "0.5.x",
+        "musicmetadata": "~0.2.x",
+        "winston": "~0.7.x",
+        "mpd": "~1.0.1",
+        "webkit-devtools-agent": "0.2.x"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shreyasubale/songserver-enhanced.git"
+    },
+    "author": "Niloy Mondal",
+    "contributors": ["Riju Nazar", "Shreyas Ubale"],
+    "license": "BSD",
+    "readmeFilename": "README"
 }
