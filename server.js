@@ -35,11 +35,9 @@ var argv = require('optimist')
 
 var PORT = argv.port || 8085;
 var mediaFolder = argv.media || '/media/';
-var albumartFolder = argv.albumart || 'albumart/';
 var adminList = (argv.adminlist && argv.adminlist.split(',')) || [];
 var mediaServer = new staticServer.Server(__dirname + mediaFolder);
 var playerClient = argv.playerClient ? argv.playerClient : 'mplayer';
-//var TagManager = require('./lib/tagManager.js');
 var SongServer = require('./lib/songServer.js');
 
 
