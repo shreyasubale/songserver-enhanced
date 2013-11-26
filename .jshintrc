@@ -79,7 +79,6 @@
     // [4]: http://www.jshint.com/options/
 
     "maxerr"        : 100,      // Maximum errors before stopping.
-    "predef"        : [
-    ],
+    "predef"        : [],
     "indent"        : 4         // Specify indentation spacing
 }
