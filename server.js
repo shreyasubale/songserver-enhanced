@@ -1,4 +1,14 @@
 'use strict';
+/* enable agent only for dev mode (for profiling)
+
+  usage
+  ================================
+  run kill -SIGUSR2 <the process id of your nodejs app> and access below URL for profiling
+  http://c4milo.github.io/node-webkit-agent/26.0.1410.65/inspector.html?host=localhost:9999&page=0
+  ===================================
+*/
+
+//var agent = require('webkit-devtools-agent');
 
 var http = require('http');
 var staticServer = require('node-static');
@@ -72,8 +82,7 @@ var websock = socketio.listen(server);
 websock.configure(function () {
     websock.disable('log');
     websock.set('authorization', function (handshakeData, callback) {
-        var query = handshakeData.query;
-        songServer.connectUser(handshakeData.address.address, query.name, query.ip);
+        songServer.connectUser(handshakeData.address.address, handshakeData.query.name);
         callback(null, true);
     });
 });
@@ -185,5 +194,5 @@ websock.sockets.on('connection', function (socket) {
     });
 });
 
-logger.info('Server started on port: ' + PORT);
+logger.info('Server started on port: ' + PORT + ' with pid ' + process.pid);
 
