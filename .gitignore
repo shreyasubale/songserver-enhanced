@@ -5,4 +5,5 @@ media
 logs/
 .idea/
 logs/
+logs/debug.log
 metaData.json
