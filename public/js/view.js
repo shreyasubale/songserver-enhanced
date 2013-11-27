@@ -1,5 +1,5 @@
-"use strict";
-
+'use strict';
+/* global SongServer, bootbox */
 var EventEmitter = function () {
 
     return {
@@ -23,7 +23,7 @@ var EventEmitter = function () {
                 return;
             }
             if (!this._events || !this._events[name]) {
-                throw new Error("Invalid event --> " + name);
+                throw new Error('Invalid event --> ' + name);
             }
             callbacks = this._events[name];
 
@@ -53,10 +53,6 @@ var EventEmitter = function () {
                     obj.callback.apply(obj.context || null, arguments);
                 });
             }
-        },
-
-        listenTo: function (name, cb) {
-            return app.Events.on(name, cb.bind(this));
         }
     };
 };
@@ -66,106 +62,106 @@ var View = (function () {
         mediaList,
         progressBar,
         np;
-    
-    
-    return $.extend(EventEmitter(), {
+
+
+    return $.extend(new EventEmitter(), {
         init: function () {
             var oThis = this,
                 timer;
 
-            playList = $("#playlist");
-            mediaList = $("#medialist"),
-            np = $("#now-playing");
-            progressBar = $("#progressBar");
-            
+            playList = $('#playlist');
+            mediaList = $('#medialist');
+            np = $('#now-playing');
+            progressBar = $('#progressBar');
+
             oThis.bindResizeEvent();
             oThis.initFileUploadComp();
-            
-            $("#searchTb").on("keyup", function () {
+
+            $('#searchTb').on('keyup', function () {
                 window.clearTimeout(timer);
                 timer = window.setTimeout(function (val) {
                     oThis.onSearch(val);
                 }, 500, this.value);
             });
-            
-            playList.on("click", ".icon-thumbs-up", function (e) {
+
+            playList.on('click', '.icon-thumbs-up', function (e) {
                 var $this = $(this),
-                    song = $this.parents(".np-songinfo").data("songInfo");
-                
+                    song = $this.parents('.np-songinfo').data('songInfo');
+
                 oThis.upVote(song);
                 e.preventDefault();
             });
-            
-            playList.on("click", ".icon-thumbs-down", function (e) {
+
+            playList.on('click', '.icon-thumbs-down', function (e) {
                 var $this = $(this),
-                    song = $this.parents(".np-songinfo").data("songInfo");
-                
+                    song = $this.parents('.np-songinfo').data('songInfo');
+
                 oThis.downVote(song);
                 e.preventDefault();
             });
-            
-            playList.on("click", ".remove", function (e) {
+
+            playList.on('click', '.remove', function (e) {
                 var $this = $(this),
-                    song = $this.parents(".np-songinfo").data("songInfo");
-                
+                    song = $this.parents('.np-songinfo').data('songInfo');
+
                 oThis.onDequeue(song);
             });
-	    
-	    np.on("click", ".icon-step-forward", function (e) {
-		oThis.trigger("skipSong");
-	    });            
 
-        },
-        
-        bindResizeEvent: function () {
-            $(window).bind("resize",function(){
-                var docHeight = $(window).height();
-                playList.height(docHeight-120);
-                mediaList.height(docHeight-160);
+            np.on('click', '.icon-step-forward', function (e) {
+                oThis.trigger('skipSong');
             });
 
-            $(window).trigger("resize");
         },
-        
+
+        bindResizeEvent: function () {
+            $(window).bind('resize', function () {
+                var docHeight = $(window).height();
+                playList.height(docHeight - 120);
+                mediaList.height(docHeight - 160);
+            });
+
+            $(window).trigger('resize');
+        },
+
         initFileUploadComp: function () {
             var oThis = this;
 
-            $("#fileUpload").submit(function (event) {
+            $('#fileUpload').submit(function (event) {
                 event.preventDefault();
-                $("#uploadProgress").fadeIn();
-                var files = document.getElementById("uploadFile").files;
-                oThis.trigger("songUpload", files);
+                $('#uploadProgress').fadeIn();
+                var files = document.getElementById('uploadFile').files;
+                oThis.trigger('songUpload', files);
             });
 
-            $("#upload-song").click(function () {
-                $('#uploadFile').trigger("click");
+            $('#upload-song').click(function () {
+                $('#uploadFile').trigger('click');
             });
 
-            $("#uploadFile").bind("change",function () {
-                $("#upload").click();
+            $('#uploadFile').bind('change', function () {
+                $('#upload').click();
             });
         },
-        
+
         renderMediaList: function (list) {
             mediaList.empty();
             list.forEach(function (item) {
-                var span = $("<span />"),
-                    li = $("<li />"),
-		    downLink = $('<a class="icon-download"/> </a>');
+                var span = $('<span />'),
+                    li = $('<li />'),
+                    downLink = $('<a class="icon-download"/> </a>');
 
-		downLink.attr({
-		    "href": "/mediaFiles/" + item.name,
-		    "title": "Download " + item.name
-		});
-                
+                downLink.attr({
+                    'href': '/mediaFiles/' + item.name,
+                    'title': 'Download ' + item.name
+                });
+
                 span.text(item.name);
-                span.on("click", this.onEnqueue.bind(this, item));
-		li.append(downLink);
+                span.on('click', this.onEnqueue.bind(this, item));
+                li.append(downLink);
                 mediaList.append(li.append(span));
             }, this);
-            
+
         },
-        
+
         renderPlayList: function (songs) {
             //console.clear();
             playList.empty();
@@ -184,104 +180,106 @@ var View = (function () {
         },
 
         _getAlbumArt: function (song) {
-            return song.info.nameHash===null?"/img/50_album.png":"/albumart/"+song.info.nameHash+".jpg";
+            return song.info.nameHash === null ? '/img/50_album.png' : '/albumart/' + song.info.nameHash + '.jpg';
         },
 
         showNowPlaying: function (song) {
             var albumArt = this._getAlbumArt(song);
+
             var dom = [
-                '<div class="np-albumart"><img src="'+albumArt+'" /></div>',
+                '<div class="np-albumart"><img src="' + albumArt + '" /></div>',
                 '<div class="container-sd">',
-                    "<div class='np-songtext' title='" + song.name + "'>" + song.name + "</div>",
-                    "<div class='addedBy' title='" + song.user.name + "'>Added By ",
-                    song.user.name + "</div>",
-                 '</div>',
+                '<div class="np-songtext" title="' + song.name + '">' + song.name + '</div>',
+                '<div class="addedBy" title="' + song.user.name + '">Added By ',
+                song.user.name + '</div>',
+                '</div>'
             ];
-	    if (SongServer.isAdminUser()) {
-		dom.splice(5, 0, '<a href="#" title="Skip Song" class="icon-step-forward skip"></a>')
-	    }
-            np.empty().append(dom.join(""));
+
+            if (SongServer.isAdminUser()) {
+                dom.splice(5, 0, '<a href="#" title="Skip Song" class="icon-step-forward skip"></a>');
+            }
+            np.empty().append(dom.join(''));
         },
-        
+
         alert: function (message) {
             bootbox.alert(message);
         },
-        
+
         renderUploadComp: function (container) {
-        
-        },
-        
-        showMessage: function (msg, type) {
-        
-        },
-        
-        showNotification: function (message) {
-        
+
         },
 
-	songComplete: function () {
-	    np.empty();
-	},
-        
-        showUploadProgress: function (val) {
-            progressBar.css("width", val + "%");
+        showMessage: function (msg, type) {
+
         },
-        
+
+        showNotification: function (message) {
+
+        },
+
+        songComplete: function () {
+            np.empty();
+        },
+
+        showUploadProgress: function (val) {
+            progressBar.css('width', val + '%');
+        },
+
         onUploadSuccess: function () {
-            $("#uploadProgress").delay(2000).fadeOut(function () {
-                progressBar.css("width", 0);
-                $("#alert-container .uploadComplete").slideDown(function () {
+            $('#uploadProgress').delay(2000).fadeOut(function () {
+                progressBar.css('width', 0);
+                $('#alert-container .uploadComplete').slideDown(function () {
                     setTimeout(function (el) {
                         el.slideUp();
-                    }, 5000, $(this))
+                    }, 5000, $(this));
                 });
             });
         },
-        
+
         onEnqueue: function (song) {
-            this.trigger("songSelected", song);
+            this.trigger('songSelected', song);
         },
-        
+
         onDequeue: function (song) {
-            this.trigger("songRemoved", song);
+            this.trigger('songRemoved', song);
         },
-        
+
         upVote: function (song) {
-            this.trigger("upVote", song);
+            this.trigger('upVote', song);
         },
-        
+
         downVote: function (song) {
-            this.trigger("downVote", song);
+            this.trigger('downVote', song);
         },
-        
+
         onSearch: function (keyWord, isMedia) {
-            this.trigger("search", keyWord);
+            this.trigger('search', keyWord);
         },
-        
+
         setName: function (name) {
-            $("#nameHolder").text(name);
+            $('#nameHolder').text(name);
         },
-        
+
         showUpVoteDialog: function (msg, song) {
             var oThis = this;
 
             bootbox.dialog(msg, [{
-                "label": "Upvote",
-                "class": "btn-success",
-                "callback": function () {
+                'label': 'Upvote',
+                'class': 'btn-success',
+                'callback': function () {
                     oThis.upVote(song);
                 }
             }, {
-                "label": "Cancel",
-                "class": "btn-secondary"
+                'label': 'Cancel',
+                'class': 'btn-secondary'
             }]);
         },
-        
+
         getUserName: function () {
-            var username = "";
+            var username = '';
 
             while (!username || username.trim().length < 3) {
-                username = prompt("Please enter your name");
+                username = window.prompt('Please enter your name');
             }
             this.trigger('nameChange', username);
             this.setName(username);
@@ -289,58 +287,58 @@ var View = (function () {
 
         getPlaylistItemDom: function (song, isMySong, likedByMe, disLikedByMe) {
             //console.log(song.name, song.weightedRating);
-            var albumArt = this._getAlbumArt(song);
-            var dom = $("<div>").addClass("np-songinfo"),
-                container = $("<div>").addClass("container-sd"),
-                songname = $("<div>").addClass('np-songtext'),
-                addedBy = $("<div>").addClass("addedBy"),
-                like = $("<a href='#'>").addClass('icon-thumbs-up'),
-                dislike = $("<a href='#'>").addClass('icon-thumbs-down'),
-                albumArt = $('<div class="pl-albumart">').append("<img src='"+albumArt+"'>"),
-                wrapper = $("<div>");
-            
-            dom.data("songInfo", song).data("isMySong", isMySong);
+
+            var dom = $('<div>').addClass('np-songinfo'),
+                container = $('<div>').addClass('container-sd'),
+                songname = $('<div>').addClass('np-songtext'),
+                addedBy = $('<div>').addClass('addedBy'),
+                like = $('<a href="#">').addClass('icon-thumbs-up'),
+                dislike = $('<a href="#">').addClass('icon-thumbs-down'),
+                albumArt = $('<div class="pl-albumart">').append('<img src="' + this._getAlbumArt(song) + '">'),
+                wrapper = $('<div>');
+
+            dom.data('songInfo', song).data('isMySong', isMySong);
             dom.append(albumArt);
-            songname.text(song.name).attr("title", song.name);
-            addedBy.text("Added by " + song.user.name).attr("title", song.user.name);
+            songname.text(song.name).attr('title', song.name);
+            addedBy.text('Added by ' + song.user.name).attr('title', song.user.name);
             like.text(song.likes);
             dislike.text(song.dislikes);
-            
+
             if (likedByMe) {
                 like.addClass('active');
             } else if (disLikedByMe) {
                 dislike.addClass('active');
             }
 
-            if(song.user.isAdmin){
-                addedBy.addClass("adminUser");
+            if (song.user.isAdmin) {
+                addedBy.addClass('adminUser');
             }
-            
+
             if (song.likes) {
                 like.tooltip({
-                    placement: "left",
+                    placement: 'left',
                     title: song.likers.map(function (liker) {
                         return liker.name;
-                    }).join(", ")
+                    }).join(', ')
                 });
             }
             if (song.dislikes) {
                 dislike.tooltip({
-                    placement: "left",
+                    placement: 'left',
                     title: song.dislikers.map(function (disliker) {
                         return disliker.name;
-                    }).join(", ")
+                    }).join(', ')
                 });
             }
-            
-            wrapper.append(addedBy, $("<div class='actionIcons'>").append(like, dislike));
+
+            wrapper.append(addedBy, $('<div class="actionIcons">').append(like, dislike));
             container.append(songname, wrapper);
             dom.append(container);
-            
+
             if (isMySong || SongServer.isAdminUser()) {
-                dom.append("<div class='icons'><a class='remove' href='javascript:void(0)'></a></div>");
+                dom.append('<div class="icons"><a class="remove" href="javascript:void(0)"></a></div>');
             }
-            
+
             return dom;
         }
     });

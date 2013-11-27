@@ -1,36 +1,36 @@
-"use strict";
+'use strict';
 var fs = require('fs');
 var mm = require('musicmetadata');
-var util = require("util");
-var mediaFolder = "./media";
-var crypto = require("crypto");
+var util = require('util');
+var mediaFolder = './media';
+var crypto = require('crypto');
 
 
 var files = fs.readdirSync(mediaFolder);
-var file="";
+var file = '';
 var metaData = {};
 
 
-var parseFiles = function(fileName,callBack){
-    callBack = typeof callBack == "function"?callBack : function(){};
-    var fileExt = fileName.split(".");
-    fileExt = fileExt[fileExt.length-1];
-    var parseObj = new mm(fs.createReadStream(mediaFolder+'/'+fileName));
+var parseFiles = function (fileName, callBack) {
+    callBack = typeof callBack === 'function' ? callBack : function () {};
+    var fileExt = fileName.split('.');
+    fileExt = fileExt[fileExt.length - 1];
+    var parseObj = new mm(fs.createReadStream(mediaFolder + '/' + fileName));
     parseObj.on('metadata', function (result) {
-        if(result.title!=="" && result.title!==" "){
-            fs.rename(mediaFolder+"/"+fileName,mediaFolder+"/"+result.title+"."+fileExt);
+        if (result.title !== '' && result.title !== ' ') {
+            fs.rename(mediaFolder + '/' + fileName, mediaFolder + '/' + result.title + '.' + fileExt);
         }
-        var hash = crypto.createHash('md5').update(fileName).digest("hex");
+        var hash = crypto.createHash('md5').update(fileName).digest('hex');
         console.log(result.picture);
-        if(util.isArray(result.picture)){
-            fs.writeFileSync("public/albumart/"+hash+".jpg",result.picture[0].data);
+        if (util.isArray(result.picture)) {
+            fs.writeFileSync('public/albumart/' + hash + '.jpg', result.picture[0].data);
         }
 
         delete result.picture;
 
-        if(fileName){
+        if (fileName) {
             metaData[hash] = result;
-            callBack.call(this,metaData,fileName);
+            callBack.call(this, metaData, fileName);
         }
 
         //console.log(metaData)
@@ -38,16 +38,16 @@ var parseFiles = function(fileName,callBack){
 
 }
 
-for(var i=0;i<files.length;i++){
-    parseFiles(files[i],function(metaData,fileName){
+for (var i = 0; i < files.length; i++) {
+    parseFiles(files[i], function (metaData, fileName) {
 //        console.log(fileName);
 //        console.log(fileName);
-//        console.log("----------");
+//        console.log('----------');
         //if(fileName == files[files.length-1]){
         console.log(fileName);
-        fs.writeFile("metaData.json",JSON.stringify(metaData,null,4));
+        fs.writeFile('metaData.json', JSON.stringify(metaData, null, 4));
         //}
 
     });
-    //fs.writeFile("albumart/"+result.title+".jpg",result.picture[0].data)
+    //fs.writeFile('albumart/'+result.title+'.jpg',result.picture[0].data)
 }

@@ -3,3 +3,7 @@ node_modules/
 npm-debug.log
 media
 logs/
+.idea/
+logs/
+logs/debug.log
+metaData.json
